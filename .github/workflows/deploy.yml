@@ -25,6 +25,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          
       - name: Build and Tag Docker
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
