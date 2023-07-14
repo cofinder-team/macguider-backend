@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
@@ -20,9 +21,16 @@ async function bootstrap() {
     }),
   );
 
-  const configService = app.get(ConfigService);
-  const port = configService.get('APP_PORT');
+  const corsOrigin =
+    configService.get('NODE_ENV') === 'prod'
+      ? ['https://www.macguider.io']
+      : ['https://dev.macguider.io'];
+  app.enableCors({
+    origin: corsOrigin,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  });
 
+  const port = configService.get('APP_PORT');
   await app.listen(port);
 }
 bootstrap();
