@@ -6,11 +6,10 @@ Backend Repository for [Macguider](https://macguider.io)
 
 ### Environment Configuration
 
-Configuration with `.env` file should be done before running the app.
+Configuration by environment variable should be done before running the app.
 
 - At:
-  - Development mode: `.env.dev` file
-  - Production mode: `.env.prod` file
+  - `.env` file
 - About:
   - `APP_PORT`: Application listening port
   - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`: Database configurations
@@ -34,19 +33,23 @@ $ npm install
 
 ### Execution
 
-#### Development Mode
+#### Local Serve
 
 ```bash
+$ npm run start:local
+```
+
+#### Development Deployment
+
+```bash
+$ npm run start:prod
 $ npm run start:dev
 ```
 
-#### Production Mode
+#### Production Deployment
 
 ```bash
-# build
 $ npm run build
-
-# start
 $ npm run start:prod
 ```
 
