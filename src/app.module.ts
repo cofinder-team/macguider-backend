@@ -3,11 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { LoggerMiddleware } from './lib/middlewares/logger.middleware';
+import { validateEnvironment } from './lib/utils/env.validate';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'prod' ? '.env.prod' : '.env.dev',
+      validate: validateEnvironment,
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
