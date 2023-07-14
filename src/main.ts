@@ -1,8 +1,8 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ValidationException } from './exceptions/validation.exception';
-import { AllExceptionsFilter } from './filters/exception.filter';
+import { AllExceptionsFilter } from './lib/filters/exception.filter';
+import { ValidationException } from './lib/exceptions/validation.exception';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

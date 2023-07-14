@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Request } from 'express';
-import { ValidationException } from 'src/exceptions/validation.exception';
+import { ValidationException } from '../exceptions/validation.exception';
 import { EntityNotFoundError, TypeORMError } from 'typeorm';
 
 @Catch()

@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { LoggerMiddleware } from './lib/middlewares/logger.middleware';
 
 @Module({
   imports: [
