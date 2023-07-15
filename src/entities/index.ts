@@ -1,4 +1,7 @@
 import { Deal } from './deal.entity';
+import { ItemDetailEntity } from './item.detall.entity';
 import { Item } from './item.entity';
+import { ItemIpad } from './item.ipad.entity';
+import { ItemMacbook } from './item.macbook.entity';
 
-export { Deal, Item };
+export { Deal, Item, ItemMacbook, ItemIpad, ItemDetailEntity };
