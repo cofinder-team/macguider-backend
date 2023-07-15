@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './lib/middlewares/logger.middleware';
 import { validateEnvironment } from './lib/utils/env.validate';
 import { DealModule } from './apis/deal/deal.module';
 import { ItemModule } from './apis/item/item.module';
+import { PriceModule } from './apis/price/price.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ItemModule } from './apis/item/item.module';
     }),
     DealModule,
     ItemModule,
+    PriceModule,
   ],
 })
 export class AppModule implements NestModule {
