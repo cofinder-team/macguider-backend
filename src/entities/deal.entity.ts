@@ -1,4 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Item } from './item.entity';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
@@ -31,4 +39,11 @@ export class Deal extends BaseEntity {
 
   @Column({ type: 'bytea' })
   image: Buffer;
+
+  @ManyToOne(() => Item, (item) => item.deals)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'item_id', referencedColumnName: 'id' },
+  ])
+  item: Item;
 }

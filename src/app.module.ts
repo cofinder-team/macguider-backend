@@ -5,6 +5,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { LoggerMiddleware } from './lib/middlewares/logger.middleware';
 import { validateEnvironment } from './lib/utils/env.validate';
 import { DealModule } from './apis/deal/deal.module';
+import { ItemModule } from './apis/item/item.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DealModule } from './apis/deal/deal.module';
       synchronize: false,
     }),
     DealModule,
+    ItemModule,
   ],
 })
 export class AppModule implements NestModule {
