@@ -7,7 +7,7 @@ export class DealService {
   constructor(private readonly dealrepository: DealRepository) {}
 
   async getDeals(): Promise<Deal[]> {
-    return this.dealrepository.find();
+    return this.dealrepository.find({ order: { date: 'DESC' } });
   }
 
   async getDealImage(id: number): Promise<Buffer> {
