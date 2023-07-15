@@ -9,4 +9,12 @@ export class DealService {
   async getDeals(): Promise<Deal[]> {
     return this.dealrepository.find();
   }
+
+  async getDealImage(id: number): Promise<Buffer> {
+    const { image } = await this.dealrepository.findOneOrFail({
+      where: { id },
+    });
+
+    return image;
+  }
 }
