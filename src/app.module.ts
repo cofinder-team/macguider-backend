@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { LoggerMiddleware } from './lib/middlewares/logger.middleware';
 import { validateEnvironment } from './lib/utils/env.validate';
+import { DealModule } from './apis/deal/deal.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { validateEnvironment } from './lib/utils/env.validate';
       namingStrategy: new SnakeNamingStrategy(),
       synchronize: false,
     }),
+    DealModule,
   ],
 })
 export class AppModule implements NestModule {
