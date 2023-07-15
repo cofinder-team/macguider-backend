@@ -24,4 +24,9 @@ export class ItemService {
         throw new EntityNotFoundError(ItemDetailEntity, type);
     }
   }
+
+  async getItem(type: string, id: number): Promise<ItemDetailEntity> {
+    const repository = this.findRepositoryByType(type);
+    return repository.findOneOrFail({ where: { id } });
+  }
 }
