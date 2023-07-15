@@ -28,4 +28,7 @@ export class Deal extends BaseEntity {
 
   @Column()
   url: string;
+
+  @Column({ type: 'bytea' })
+  image: Buffer;
 }
