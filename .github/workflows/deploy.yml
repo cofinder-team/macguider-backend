@@ -74,8 +74,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: $EB_APPLICATION_NAME
-          environment_name: $EB_ENVIRONMENT_NAME
+          application_name: ${{ env.EB_APPLICATION_NAME }}
+          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
           version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.AWS_DEFAULT_REGION }}
           deployment_package: deploy/deploy.zip
