@@ -48,7 +48,7 @@ export class DealService {
     const deal = {
       type,
       itemId,
-      unopened: unused,
+      unused,
       ...payload,
       price,
       source,
