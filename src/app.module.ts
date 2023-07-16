@@ -7,6 +7,7 @@ import { validateEnvironment } from './lib/utils/env.validate';
 import { DealModule } from './apis/deal/deal.module';
 import { ItemModule } from './apis/item/item.module';
 import { PriceModule } from './apis/price/price.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PriceModule } from './apis/price/price.module';
     ItemModule,
     PriceModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
