@@ -30,4 +30,10 @@ export class DealService {
 
     return image;
   }
+
+  async getDealRaw(id: number): Promise<DealRaw> {
+    return this.dealRawRepository.findOneOrFail({
+      where: { id, classified: false },
+    });
+  }
 }
