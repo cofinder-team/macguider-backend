@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Deal } from 'src/entities';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Deal, DealRaw } from 'src/entities';
 import { DealRepository } from 'src/repositories';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class DealService {
-  constructor(private readonly dealrepository: DealRepository) {}
+  constructor(
+    private readonly dealrepository: DealRepository,
+    @InjectRepository(DealRaw)
+    private readonly dealRawRepository: Repository<DealRaw>,
+  ) {}
 
   async getDeals(): Promise<Deal[]> {
     const utcHour: number = new Date().getUTCHours();
