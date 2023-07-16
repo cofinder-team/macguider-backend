@@ -18,5 +18,5 @@ export class DealRawRequestDto {
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
-  unopened?: boolean;
+  unused?: boolean;
 }
