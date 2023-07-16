@@ -25,6 +25,11 @@ export class ItemService {
     }
   }
 
+  async getItems(): Promise<ItemDetailEntity[]> {
+    const items = await this.itemrepository.find();
+    return Promise.all(items.map(({ type, id }) => this.getItem(type, id)));
+  }
+
   async getItem(type: string, id: number): Promise<ItemDetailEntity> {
     const repository = this.findRepositoryByType(type);
     return repository.findOneOrFail({ where: { id } });
