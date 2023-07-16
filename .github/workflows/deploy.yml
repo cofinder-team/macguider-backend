@@ -2,9 +2,7 @@ name: Build and Push Docker image to ECR and Deploy EB
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
 
 jobs:
   build: 
@@ -33,14 +31,14 @@ jobs:
       - name: Build and Tag Docker
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ github.ref == 'refs/heads/master' && secrets.ECR_REPOSITORY || secrets.DEV_ECR_REPOSITORY }}
           IMAGE_TAG:  ${{ secrets.IMAGE_TAG }}
         run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           
       - name: Push Docker image to ECR 
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ github.ref == 'refs/heads/master' && secrets.ECR_REPOSITORY || secrets.DEV_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -62,19 +60,36 @@ jobs:
           utcOffset: "+09:00"
 
       - name: Generate deployment package
+        env: 
+          DOCKER_CONFIG_FILE: ${{ github.ref == 'refs/heads/master' && 'Dockerrun.aws.json' || 'develop-Dockerrun.aws.json' }}
         run: |
           mkdir -p deploy
-          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cp $DOCKER_CONFIG_FILE deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
           
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v14
+        env:
+          EB_APPLICATION_NAME : ${{ secrets.AWS_BEANSTALK_APP_NAME }}
+          EB_ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/master' && secrets.AWS_BEANSTALK_ENV_NAME || secrets.DEV_AWS_BEANSTALK_ENV_NAME }}
+
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ secrets.AWS_BEANSTALK_APP_NAME }}
-          environment_name: ${{ secrets.AWS_BEANSTALK_ENV_NAME }}
+          application_name: ${{ env.EB_APPLICATION_NAME }}
+          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
           version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.AWS_DEFAULT_REGION }}
           deployment_package: deploy/deploy.zip
           wait_for_environment_recovery: 200
+
+      - name: Send deployment notification
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: logs
+          SLACK_USERNAME: github-actions
+          SLACK_MESSAGE: |
+            *${{ github.repository }}* has been deployed to *${{ github.ref }}* by *${{ github.actor }}*
+            ${{ github.event.head_commit.message }}
+            ${{ github.event.head_commit.url }}
