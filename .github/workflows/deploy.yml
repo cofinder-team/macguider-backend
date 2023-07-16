@@ -31,14 +31,14 @@ jobs:
       - name: Build and Tag Docker
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ github.ref == 'refs/heads/master' && secrets.ECR_REPOSITORY || secrets.DEV_ECR_REPOSITORY }}
           IMAGE_TAG:  ${{ secrets.IMAGE_TAG }}
         run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           
       - name: Push Docker image to ECR 
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ github.ref == 'refs/heads/master' && secrets.ECR_REPOSITORY || secrets.DEV_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
         run: |
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -67,11 +67,15 @@ jobs:
           
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v14
+        env:
+          EB_APPLICATION_NAME : ${{ secrets.AWS_BEANSTALK_APP_NAME }}
+          EB_ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/master' && secrets.AWS_BEANSTALK_ENV_NAME || secrets.DEV_AWS_BEANSTALK_ENV_NAME }}
+
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ secrets.AWS_BEANSTALK_APP_NAME }}
-          environment_name: ${{ secrets.AWS_BEANSTALK_ENV_NAME }}
+          application_name: $EB_APPLICATION_NAME
+          environment_name: $EB_ENVIRONMENT_NAME
           version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.AWS_DEFAULT_REGION }}
           deployment_package: deploy/deploy.zip
