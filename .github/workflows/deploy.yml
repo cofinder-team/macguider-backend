@@ -2,9 +2,7 @@ name: Build and Push Docker image to ECR and Deploy EB
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
 
 jobs:
   build: 
