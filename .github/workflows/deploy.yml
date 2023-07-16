@@ -60,9 +60,11 @@ jobs:
           utcOffset: "+09:00"
 
       - name: Generate deployment package
+        env: 
+          DOCKER_CONFIG_FILE: ${{ github.ref == 'refs/heads/master' && 'Dockerrun.aws.json' || 'develop-Dockerrun.aws.json' }}
         run: |
           mkdir -p deploy
-          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cp $DOCKER_CONFIG_FILE deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
           
       - name: Beanstalk Deploy
