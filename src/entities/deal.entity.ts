@@ -29,7 +29,7 @@ export class Deal extends BaseEntity {
   sold: boolean;
 
   @Column()
-  unopened: boolean;
+  unused: boolean;
 
   @Column()
   source: string;
