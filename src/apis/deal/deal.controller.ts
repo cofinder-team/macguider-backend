@@ -1,7 +1,19 @@
-import { Controller, Get, Header, Param, StreamableFile } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Param,
+  Put,
+  StreamableFile,
+} from '@nestjs/common';
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
-import { DealRawResponseDto, DealResponseDto } from 'src/dtos';
+import {
+  DealRawRequestDto,
+  DealRawResponseDto,
+  DealResponseDto,
+} from 'src/dtos';
 
 @Controller('deal')
 export class DealController {
@@ -25,5 +37,20 @@ export class DealController {
   async getDealRaw(@Param('id') id: number): Promise<DealRawResponseDto> {
     const dealRaw = await this.dealService.getDealRaw(id);
     return DealRawResponseDto.of(dealRaw);
+  }
+
+  @Put('/raw/:id')
+  async convertDealFromRaw(
+    @Param('id') id: number,
+    @Body() body: DealRawRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDealRaw(id);
+
+    const { valid, ...payload } = body;
+    if (valid) {
+      await this.dealService.createDeal(id, payload);
+    }
+
+    await this.dealService.classifyDealRaw(id);
   }
 }

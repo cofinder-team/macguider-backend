@@ -1,4 +1,5 @@
+import { DealRawRequestDto } from './deal.raw.req.dto';
 import { DealRawResponseDto } from './deal.raw.res.dto';
 import { DealResponseDto } from './deal.res.dto';
 
-export { DealResponseDto, DealRawResponseDto };
+export { DealResponseDto, DealRawRequestDto, DealRawResponseDto };

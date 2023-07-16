@@ -36,4 +36,28 @@ export class DealService {
       where: { id, classified: false },
     });
   }
+
+  async classifyDealRaw(id: number): Promise<void> {
+    await this.dealRawRepository.update({ id }, { classified: true });
+  }
+
+  async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
+    const dealRaw = await this.getDealRaw(id);
+    const { price, source, url, date, image, type, itemId, unused } = dealRaw;
+
+    const deal = {
+      type,
+      itemId,
+      unopened: unused,
+      ...payload,
+      price,
+      source,
+      sold: false,
+      url,
+      date,
+      image,
+    };
+
+    await this.dealrepository.create(deal).save();
+  }
 }
