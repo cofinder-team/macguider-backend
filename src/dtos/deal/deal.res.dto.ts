@@ -5,14 +5,14 @@ export class DealResponseDto {
   type: string;
   itemId: number;
   date: Date;
-  price?: number;
+  price: number;
   sold: boolean;
-  unopened: boolean;
+  unused: boolean;
   source: string;
   url: string;
 
   static of(deal: Deal): DealResponseDto {
-    const { id, type, itemId, date, price, sold, unopened, source, url } = deal;
-    return { id, type, itemId, date, price, sold, unopened, source, url };
+    const { id, type, itemId, date, price, sold, unused, source, url } = deal;
+    return { id, type, itemId, date, price, sold, unused, source, url };
   }
 }
