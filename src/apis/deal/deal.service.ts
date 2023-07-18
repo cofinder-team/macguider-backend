@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Deal, DealRaw } from 'src/entities';
 import { DealRepository } from 'src/repositories';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DealService {
@@ -38,7 +38,11 @@ export class DealService {
 
   async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
     const dealRaw = await this.getDealRaw(id);
-    const { price, source, url, date, image, type, itemId, unused } = dealRaw;
+    const { price, source, url, date, imgUrl, type, itemId, unused } = dealRaw;
+
+    const image = await fetch(`${imgUrl}?type=w300`).then((res) =>
+      res.arrayBuffer().then(Buffer.from),
+    );
 
     const deal = {
       type,
