@@ -35,8 +35,8 @@ export class DealRaw {
   @Column()
   unused: boolean;
 
-  @Column({ type: 'bytea' })
-  image: Buffer;
+  @Column()
+  imgUrl: string;
 
   @Column()
   classified: boolean;
