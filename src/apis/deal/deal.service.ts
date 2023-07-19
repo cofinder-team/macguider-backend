@@ -40,9 +40,12 @@ export class DealService {
     const dealRaw = await this.getDealRaw(id);
     const { price, source, url, date, imgUrl, type, itemId, unused } = dealRaw;
 
-    const image = await fetch(`${imgUrl}?type=w300`).then((res) =>
-      res.arrayBuffer().then(Buffer.from),
-    );
+    const image = await fetch(`${imgUrl}?type=w300`)
+      .then((res) => res.arrayBuffer().then(Buffer.from))
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
 
     const deal = {
       type,
