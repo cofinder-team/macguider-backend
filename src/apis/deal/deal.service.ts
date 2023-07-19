@@ -1,25 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Deal, DealRaw } from 'src/entities';
+import { Deal, DealRaw, DealFiltered } from 'src/entities';
 import { DealRepository } from 'src/repositories';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class DealService {
   constructor(
-    private readonly dealrepository: DealRepository,
+    private readonly dealRepository: DealRepository,
     @InjectRepository(DealRaw)
     private readonly dealRawRepository: Repository<DealRaw>,
+    @InjectRepository(DealFiltered)
+    private readonly dealFilteredRepository: Repository<DealFiltered>,
   ) {}
 
-  async getDeals(): Promise<Deal[]> {
-    return this.dealrepository.find({
+  async getDeals(): Promise<DealFiltered[]> {
+    return this.dealFilteredRepository.find({
       order: { date: 'DESC' },
     });
   }
 
+  async getDeal(id: number): Promise<DealFiltered> {
+    return this.dealFilteredRepository.findOneOrFail({ where: { id } });
+  }
+
   async getDealImage(id: number): Promise<Buffer> {
-    const { image } = await this.dealrepository.findOneOrFail({
+    const { image } = await this.dealRepository.findOneOrFail({
       where: { id },
     });
 
@@ -60,6 +66,6 @@ export class DealService {
       image,
     };
 
-    await this.dealrepository.create(deal).save();
+    await this.dealRepository.create(deal).save();
   }
 }
