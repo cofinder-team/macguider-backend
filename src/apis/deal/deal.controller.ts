@@ -13,6 +13,12 @@ export class DealController {
     return deals.map(DealResponseDto.of);
   }
 
+  @Get('/:id')
+  async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
+    const deal = await this.dealService.getDeal(id);
+    return DealResponseDto.of(deal);
+  }
+
   @Get('/:id/image')
   @Header('Content-Type', 'image/jpeg')
   async getDealImage(@Param('id') id: number) {
