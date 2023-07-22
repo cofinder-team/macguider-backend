@@ -8,6 +8,7 @@ import { DealModule } from './apis/deal/deal.module';
 import { ItemModule } from './apis/item/item.module';
 import { PriceModule } from './apis/price/price.module';
 import { AppController } from './app.controller';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AppController } from './app.controller';
     DealModule,
     ItemModule,
     PriceModule,
+    TerminusModule,
   ],
   controllers: [AppController],
 })
