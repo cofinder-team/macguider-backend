@@ -1,5 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ItemDetailEntity } from './item.detall.entity';
+import { Item } from './item.entity';
+import { Model } from './model.entity';
 
 @Entity({ schema: 'macguider', name: 'item_macbook' })
 export class ItemMacbook extends ItemDetailEntity {
@@ -17,4 +19,18 @@ export class ItemMacbook extends ItemDetailEntity {
 
   @Column()
   ssd: string;
+
+  @ManyToOne(() => Model, (model) => model.macbookItems)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'model', referencedColumnName: 'id' },
+  ])
+  modelEntity: Model;
+
+  @OneToOne(() => Item, (item) => item.macbook)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'id', referencedColumnName: 'id' },
+  ])
+  item: Item;
 }
