@@ -6,6 +6,6 @@ export class DealFiltered extends Deal {
   @Column()
   average: number;
 
-  @Column()
+  @Column({ type: 'numeric' })
   discount: number;
 }
