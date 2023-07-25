@@ -4,7 +4,7 @@ import { ModelResponseDto } from './model.res.dto';
 export class ItemResponseDto {
   type: string;
   id: number;
-  model?: ModelResponseDto;
+  model: ModelResponseDto | number;
   option: number;
   details: object;
 
@@ -14,9 +14,7 @@ export class ItemResponseDto {
     return {
       type,
       id,
-      ...(model && modelEntity
-        ? { model: ModelResponseDto.of(modelEntity) }
-        : {}),
+      model: modelEntity ? ModelResponseDto.of(modelEntity) : model,
       option,
       details,
     };
