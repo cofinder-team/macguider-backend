@@ -11,9 +11,21 @@ export class DealResponseDto {
   source: string;
   url: string;
   average: number;
+  discount: number;
 
   static of(deal: DealFiltered): DealResponseDto {
-    const { id, item, date, price, sold, unused, source, url, average } = deal;
+    const {
+      id,
+      item,
+      date,
+      price,
+      sold,
+      unused,
+      source,
+      url,
+      average,
+      discount,
+    } = deal;
 
     const { macbook, ipad } = item;
     const itemDetail: ItemDetailEntity = macbook || ipad || undefined;
@@ -28,6 +40,7 @@ export class DealResponseDto {
       source,
       url,
       average,
+      discount,
     };
   }
 }
