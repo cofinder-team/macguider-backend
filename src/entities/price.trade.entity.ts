@@ -14,7 +14,7 @@ export class PriceTrade extends BaseEntity {
   @Column()
   source: string;
 
-  @Column()
+  @Column({ type: 'date' })
   date: Date;
 
   @Column()
