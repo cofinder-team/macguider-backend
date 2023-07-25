@@ -5,4 +5,7 @@ import { Deal } from './deal.entity';
 export class DealFiltered extends Deal {
   @Column()
   average: number;
+
+  @Column()
+  discount: number;
 }
