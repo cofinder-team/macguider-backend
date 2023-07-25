@@ -19,7 +19,7 @@ export class Deal extends BaseEntity {
   @Column()
   itemId: number;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   date: Date;
 
   @Column()
