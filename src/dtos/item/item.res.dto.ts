@@ -14,7 +14,9 @@ export class ItemResponseDto {
     return {
       type,
       id,
-      ...(model ? { model: ModelResponseDto.of(modelEntity) } : {}),
+      ...(model && modelEntity
+        ? { model: ModelResponseDto.of(modelEntity) }
+        : {}),
       option,
       details,
     };
