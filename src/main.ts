@@ -24,7 +24,7 @@ async function bootstrap() {
   const corsOrigin =
     configService.get('NODE_ENV') === 'prod'
       ? ['https://www.macguider.io']
-      : ['https://dev.macguider.io'];
+      : '*';
   app.enableCors({
     origin: corsOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
