@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Deal, DealRaw, DealFiltered } from 'src/entities';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
+import { getTypeName } from 'src/lib/utils/type.util';
 import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import {
   FindOptionsOrder,
@@ -21,32 +22,38 @@ export class DealService {
     private readonly dealRawRepository: Repository<DealRaw>,
   ) {}
 
+  getOptions(type: string, model: number): FindOptionsWhere<DealFiltered> {
+    return type ? { type, item: { [getTypeName(type)]: { model } } } : {};
+  }
+
+  getOrder(sort: string, direction: string): FindOptionsOrder<DealFiltered> {
+    return ['date', 'discount'].includes(sort)
+      ? { [sort]: direction === 'desc' ? 'DESC' : 'ASC' }
+      : { discount: 'DESC' };
+  }
+
   private async getDeals(
     where: FindOptionsWhere<DealFiltered> | FindOptionsWhere<DealFiltered>[],
     order: FindOptionsOrder<DealFiltered>,
-    pagination: FindOptionsPage,
+    page: FindOptionsPage,
     relations: FindOptionsRelations<DealFiltered>,
   ): Promise<DealFiltered[]> {
     return this.dealFilteredRepository.find({
       where,
       order,
-      ...pagination,
+      ...page,
       relations,
     });
   }
 
   async getDealsByOptions(
     options: FindOptionsWhere<DealFiltered>,
-    pagination: FindOptionsPage,
+    order: FindOptionsOrder<DealFiltered>,
+    page: FindOptionsPage,
   ): Promise<DealFiltered[]> {
     const where: FindOptionsWhere<DealFiltered> = {
       ...options,
       date: MoreThanOrEqual(addDays(new Date(), -3)),
-    };
-
-    const order: FindOptionsOrder<DealFiltered> = {
-      discount: 'DESC',
-      date: 'DESC',
     };
 
     const relations: FindOptionsRelations<DealFiltered> = {
@@ -56,7 +63,7 @@ export class DealService {
       },
     };
 
-    return this.getDeals(where, order, pagination, relations);
+    return this.getDeals(where, order, page, relations);
   }
 
   async getDeal(id: number): Promise<DealFiltered> {
