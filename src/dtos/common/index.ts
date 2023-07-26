@@ -1,3 +1,4 @@
+import { ItemDto } from './item.dto';
 import { PaginationDto } from './pagination.dto';
 
-export { PaginationDto };
+export { ItemDto, PaginationDto };
