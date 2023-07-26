@@ -7,6 +7,15 @@ import { FindOptionsOrder, FindOptionsWhere } from 'typeorm';
 export class PriceService {
   constructor(private readonly priceTradeRepository: PriceTradeRepository) {}
 
+  async getTradePrices(
+    options: FindOptionsWhere<PriceTrade>,
+  ): Promise<PriceTrade[]> {
+    const where: FindOptionsWhere<PriceTrade> = { ...options };
+    const order: FindOptionsOrder<PriceTrade> = { date: 'ASC' };
+
+    return this.priceTradeRepository.find({ where, order });
+  }
+
   async getRecentTradePrice(
     options: FindOptionsWhere<PriceTrade>,
   ): Promise<PriceTrade> {
