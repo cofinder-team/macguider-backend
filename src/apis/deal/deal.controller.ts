@@ -10,7 +10,6 @@ import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import { DealRequestDto, DealResponseDto } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
-import { getTypeName } from 'src/lib/utils/type.util';
 
 @Controller('deal')
 export class DealController {
@@ -18,15 +17,16 @@ export class DealController {
 
   @Get()
   async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
-    const { type, model, ...pagination } = query;
+    const { type, model, sort, direction, ...pagination } = query;
 
-    const options = type
-      ? { type, item: { [getTypeName(type)]: { model } } }
-      : {};
+    const options = this.dealService.getOptions(type, model);
+    const order = this.dealService.getOrder(sort, direction);
+    const page = paginate(pagination);
 
     const deals = await this.dealService.getDealsByOptions(
       options,
-      paginate(pagination),
+      order,
+      page,
     );
 
     return deals.map(DealResponseDto.of);
