@@ -5,6 +5,7 @@ import {
   Header,
   Param,
   Put,
+  Post,
   Query,
   StreamableFile,
 } from '@nestjs/common';
@@ -17,10 +18,19 @@ import {
   DealResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
+import { ConfigService } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
+import { DealReportRequestDto } from 'src/dtos/deal/deal.report.req.dto';
+import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
+import { firstValueFrom, map } from 'rxjs';
 
 @Controller('deal')
 export class DealController {
-  constructor(private readonly dealService: DealService) {}
+  constructor(
+    private readonly dealService: DealService,
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
+  ) {}
 
   @Get()
   async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
@@ -72,5 +82,24 @@ export class DealController {
     }
 
     await this.dealService.classifyDealRaw(id);
+  }
+
+  @Post('/:id/report')
+  async reportDeal(
+    @Param('id') id: number,
+    @Body() body: DealReportRequestDto,
+  ): Promise<AxiosResponse> {
+    const url = this.configService.get('SLACK_WEBHOOK_URL');
+    const { report } = body;
+
+    const data = {
+      channel: 'hotdeal-alert',
+      username: 'User Report',
+      text: `[Report] #${id}\n${report}\nhttps://dev.macguider.io/deals/report/${id}`,
+    };
+
+    return firstValueFrom(
+      this.httpService.post(url, data).pipe(map((x) => x.data)),
+    );
   }
 }

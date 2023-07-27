@@ -4,10 +4,19 @@ import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import { DealController } from './deal.controller';
 import { DealService } from './deal.service';
 import { DealRaw } from 'src/entities';
+import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([DealRepository, DealFilteredRepository, DealRaw]),
+    ConfigModule,
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: 5000,
+        maxRedirects: 5,
+      }),
+    }),
   ],
   controllers: [DealController],
   providers: [DealService, DealRepository, DealFilteredRepository],
