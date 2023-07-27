@@ -19,6 +19,9 @@ class EnvironmentVariables {
 
   @IsString()
   DB_DATABASE: string;
+
+  @IsString()
+  SLACK_WEBHOOK_URL: string;
 }
 
 export const validateEnvironment = (config: Record<string, unknown>) => {
