@@ -12,6 +12,7 @@ import {
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import {
+  DealManageRequestDto,
   DealRawConvertRequestDto,
   DealRawResponseDto,
   DealReportRequestDto,
@@ -23,6 +24,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
+import { EntityNotFoundError } from 'typeorm';
+import { Deal } from 'src/entities';
 
 @Controller('deal')
 export class DealController {
@@ -61,6 +64,22 @@ export class DealController {
     const buffer = await this.dealService.getDealImage(id);
     const readable = Readable.from(buffer);
     return new StreamableFile(readable);
+  }
+
+  @Put('/:id')
+  async manageDeal(
+    @Param('id') id: number,
+    @Body() body: DealManageRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDeal(id);
+
+    const { remove, ...payload } = body;
+
+    const { affected } = await (remove
+      ? this.dealService.deleteDeal(id)
+      : this.dealService.updateDeal(id, payload));
+
+    if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
   @Get('/raw/:id')

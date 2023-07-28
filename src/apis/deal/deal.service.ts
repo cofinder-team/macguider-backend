@@ -6,11 +6,13 @@ import { addDays } from 'src/lib/utils/date.util';
 import { getTypeName } from 'src/lib/utils/type.util';
 import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import {
+  DeleteResult,
   FindOptionsOrder,
   FindOptionsRelations,
   FindOptionsWhere,
   MoreThanOrEqual,
   Repository,
+  UpdateResult,
 } from 'typeorm';
 
 @Injectable()
@@ -84,6 +86,14 @@ export class DealService {
     });
 
     return image;
+  }
+
+  async updateDeal(id: number, payload: Partial<Deal>): Promise<UpdateResult> {
+    return this.dealRepository.update({ id }, payload);
+  }
+
+  async deleteDeal(id: number): Promise<DeleteResult> {
+    return this.dealRepository.delete({ id });
   }
 
   async getDealRaw(id: number): Promise<DealRaw> {

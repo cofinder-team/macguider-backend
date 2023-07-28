@@ -1,8 +1,8 @@
 import { IsBoolean, IsIn, IsNumber, IsOptional } from 'class-validator';
 
-export class DealRawConvertRequestDto {
+export class DealManageRequestDto {
   @IsBoolean()
-  valid: boolean;
+  remove: boolean;
 
   @IsOptional()
   @IsIn(['M', 'P'])
