@@ -1,6 +1,7 @@
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -39,6 +40,18 @@ export class Deal extends BaseEntity {
 
   @Column({ type: 'bytea' })
   image: Buffer;
+
+  @Column()
+  title: string;
+
+  @Column()
+  content: string;
+
+  @Column()
+  appleCare: boolean;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @ManyToOne(() => Item, (item) => item.deals)
   @JoinColumn([
