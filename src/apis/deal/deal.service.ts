@@ -93,7 +93,7 @@ export class DealService {
   }
 
   async deleteDeal(id: number): Promise<DeleteResult> {
-    return this.dealRepository.delete({ id });
+    return this.dealRepository.softDelete({ id });
   }
 
   async getDealRaw(id: number): Promise<DealRaw> {
