@@ -15,4 +15,16 @@ export class DealManageRequestDto {
   @IsOptional()
   @IsBoolean()
   unused?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  sold?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  appleCare?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  price?: number;
 }
