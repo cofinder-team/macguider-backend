@@ -6,11 +6,13 @@ import { addDays } from 'src/lib/utils/date.util';
 import { getTypeName } from 'src/lib/utils/type.util';
 import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import {
+  DeleteResult,
   FindOptionsOrder,
   FindOptionsRelations,
   FindOptionsWhere,
   MoreThanOrEqual,
   Repository,
+  UpdateResult,
 } from 'typeorm';
 
 @Injectable()
@@ -86,6 +88,14 @@ export class DealService {
     return image;
   }
 
+  async updateDeal(id: number, payload: Partial<Deal>): Promise<UpdateResult> {
+    return this.dealRepository.update({ id }, payload);
+  }
+
+  async deleteDeal(id: number): Promise<DeleteResult> {
+    return this.dealRepository.softDelete({ id });
+  }
+
   async getDealRaw(id: number): Promise<DealRaw> {
     return this.dealRawRepository.findOneOrFail({
       where: { id, classified: false },
@@ -98,7 +108,18 @@ export class DealService {
 
   async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
     const dealRaw = await this.getDealRaw(id);
-    const { price, source, url, date, imgUrl, type, itemId, unused } = dealRaw;
+    const {
+      price,
+      source,
+      url,
+      date,
+      imgUrl,
+      type,
+      itemId,
+      unused,
+      title,
+      content,
+    } = dealRaw;
 
     const image = await fetch(`${imgUrl}?type=w300`)
       .then((res) => res.arrayBuffer().then(Buffer.from))
@@ -118,6 +139,8 @@ export class DealService {
       url,
       date,
       image,
+      title,
+      content,
     };
 
     await this.dealRepository.create(deal).save();
