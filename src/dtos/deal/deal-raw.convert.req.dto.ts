@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsIn, IsNumber, IsOptional } from 'class-validator';
 
-export class DealRawRequestDto {
+export class DealRawConvertRequestDto {
   @IsBoolean()
   @Type(() => Boolean)
   valid: boolean;
