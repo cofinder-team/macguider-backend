@@ -14,13 +14,13 @@ import { Readable } from 'typeorm/platform/PlatformTools';
 import {
   DealRawRequestDto,
   DealRawResponseDto,
+  DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { DealReportRequestDto } from 'src/dtos/deal/deal.report.req.dto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
 

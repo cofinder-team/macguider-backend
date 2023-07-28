@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ItemService } from './item.service';
-import { ItemRequestDto, ItemResponseDto } from 'src/dtos';
+import { ItemDto, ItemResponseDto } from 'src/dtos';
 
 @Controller('item')
 export class ItemController {
@@ -13,7 +13,7 @@ export class ItemController {
   }
 
   @Get('/:type/:id')
-  async getItem(@Param() params: ItemRequestDto): Promise<ItemResponseDto> {
+  async getItem(@Param() params: ItemDto): Promise<ItemResponseDto> {
     const { type, id } = params;
     const item = await this.itemService.getItem(type, id);
     return ItemResponseDto.of(item);
