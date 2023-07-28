@@ -41,6 +41,15 @@ export class Deal extends BaseEntity {
   @Column({ type: 'bytea' })
   image: Buffer;
 
+  @Column()
+  title: string;
+
+  @Column()
+  content: string;
+
+  @Column()
+  appleCare: boolean;
+
   @DeleteDateColumn()
   deletedAt: Date;
 
