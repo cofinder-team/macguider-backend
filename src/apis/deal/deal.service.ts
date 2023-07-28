@@ -108,7 +108,18 @@ export class DealService {
 
   async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
     const dealRaw = await this.getDealRaw(id);
-    const { price, source, url, date, imgUrl, type, itemId, unused } = dealRaw;
+    const {
+      price,
+      source,
+      url,
+      date,
+      imgUrl,
+      type,
+      itemId,
+      unused,
+      title,
+      content,
+    } = dealRaw;
 
     const image = await fetch(`${imgUrl}?type=w300`)
       .then((res) => res.arrayBuffer().then(Buffer.from))
@@ -128,6 +139,8 @@ export class DealService {
       url,
       date,
       image,
+      title,
+      content,
     };
 
     await this.dealRepository.create(deal).save();
