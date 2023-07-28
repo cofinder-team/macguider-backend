@@ -34,6 +34,9 @@ export class ItemService {
 
   async getItem(type: string, id: number): Promise<ItemDetailEntity> {
     const repository = this.findRepositoryByType(type);
-    return repository.findOneOrFail({ where: { id } });
+    return repository.findOneOrFail({
+      where: { id },
+      relations: ['modelEntity'],
+    });
   }
 }
