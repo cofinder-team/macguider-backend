@@ -1,5 +1,5 @@
 import { Deal } from './deal.entity';
-import { DealRaw } from './deal.raw.entity';
+import { DealRaw } from './deal-raw.entity';
 import { DealFiltered } from './deal-filtered.entity';
 import { ItemDetailEntity } from './item-detall.entity';
 import { Item } from './item.entity';

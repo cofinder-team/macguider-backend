@@ -12,7 +12,7 @@ import {
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import {
-  DealRawRequestDto,
+  DealRawConvertRequestDto,
   DealRawResponseDto,
   DealReportRequestDto,
   DealRequestDto,
@@ -72,7 +72,7 @@ export class DealController {
   @Put('/raw/:id')
   async convertDealFromRaw(
     @Param('id') id: number,
-    @Body() body: DealRawRequestDto,
+    @Body() body: DealRawConvertRequestDto,
   ): Promise<void> {
     await this.dealService.getDealRaw(id);
 
