@@ -28,6 +28,9 @@ class EnvironmentVariables {
 
   @IsNumber()
   JWT_EXPIRES_IN: number;
+
+  @IsNumber()
+  JWT_REFRESH_EXPIRES_IN: number;
 }
 
 export const validateEnvironment = (config: Record<string, unknown>) => {
