@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { AuthRegisterRequestDto, UserResponseDto } from 'src/dtos';
@@ -17,7 +17,10 @@ export class AuthController {
     const { email, password } = body;
     const hashedPassword = await this.authService.hashPassword(password);
 
-    /* TODO: duplicate email check */
+    const isDuplicated = await this.userService.checkDuplicationEmail(email);
+    if (!isDuplicated) {
+      throw new BadRequestException('이미 서비스에 가입된 이메일입니다.');
+    }
 
     /* TODO: send email verification */
 
