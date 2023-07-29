@@ -1,7 +1,12 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { AuthRegisterRequestDto, UserResponseDto } from 'src/dtos';
+import {
+  AuthLoginRequestDto,
+  AuthRegisterRequestDto,
+  AuthTokenResponseDto,
+  UserResponseDto,
+} from 'src/dtos';
 
 @Controller('auth')
 export class AuthController {
@@ -9,6 +14,28 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
+
+  @Post('/login')
+  async login(
+    @Body() payload: AuthLoginRequestDto,
+  ): Promise<AuthTokenResponseDto> {
+    const { email, password } = payload;
+
+    const user = await this.userService.getUserByEmail(email);
+    const isVerified = await this.authService.verifyLogin(user, password);
+    if (!isVerified) {
+      throw new BadRequestException(
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+      );
+    }
+
+    const accessToken = this.authService.generateAccessToken(user);
+    const refreshToken = this.authService.generateRefreshToken(user);
+
+    /* TODO: save refresh token */
+
+    return { accessToken, refreshToken };
+  }
 
   @Post('/register')
   async register(
