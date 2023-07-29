@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { TokenPayloadDto } from 'src/dtos';
 import { User } from 'src/entities';
 import { UserRepository } from 'src/repositories';
 
@@ -21,5 +22,11 @@ export class UserService {
   async checkDuplicationEmail(email: string): Promise<boolean> {
     const user = await this.getUserByEmail(email);
     return !user;
+  }
+
+  async verifyTokenUser(token: TokenPayloadDto): Promise<boolean> {
+    const { id, email } = token;
+    const user = await this.getUserByIdEmail(id, email);
+    return !!user;
   }
 }
