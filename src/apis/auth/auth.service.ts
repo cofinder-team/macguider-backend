@@ -60,4 +60,10 @@ export class AuthService {
     const payload: TokenPayloadDto = { id, email };
     return this.signToken(payload, true);
   }
+
+  refreshAccessToken(token: any): string {
+    const { id, email } = token;
+    const payload: TokenPayloadDto = { id, email };
+    return this.signToken(payload);
+  }
 }

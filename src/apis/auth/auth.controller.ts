@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import {
   AuthLoginRequestDto,
+  AuthRefreshRequestDto,
   AuthRegisterRequestDto,
   AuthTokenResponseDto,
   UserResponseDto,
@@ -34,6 +35,21 @@ export class AuthController {
 
     /* TODO: save refresh token */
 
+    return { accessToken, refreshToken };
+  }
+
+  @Post('/refresh')
+  async refresh(
+    @Body() payload: AuthRefreshRequestDto,
+  ): Promise<AuthTokenResponseDto> {
+    const { refreshToken } = payload;
+
+    const decodedToken = await this.authService.verifyToken(refreshToken);
+    if (!(decodedToken && this.userService.verifyTokenUser(decodedToken))) {
+      throw new BadRequestException('유효하지 않은 정보입니다.');
+    }
+
+    const accessToken = this.authService.refreshAccessToken(decodedToken);
     return { accessToken, refreshToken };
   }
 
