@@ -1,25 +1,77 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { DealFiltered } from 'src/entities';
-import { DealRepository } from 'src/repositories';
-import { Repository } from 'typeorm';
+import { FindOptionsPage } from 'src/lib/types/page.type';
+import { addDays } from 'src/lib/utils/date.util';
+import { getTypeName } from 'src/lib/utils/type.util';
+import { DealFilteredRepository, DealRepository } from 'src/repositories';
+import {
+  FindOptionsOrder,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  MoreThanOrEqual,
+} from 'typeorm';
 
 @Injectable()
 export class DealService {
   constructor(
     private readonly dealRepository: DealRepository,
-    @InjectRepository(DealFiltered)
-    private readonly dealFilteredRepository: Repository<DealFiltered>,
+    private readonly dealFilteredRepository: DealFilteredRepository,
   ) {}
 
-  async getDeals(): Promise<DealFiltered[]> {
+  getOptions(type: string, model: number): FindOptionsWhere<DealFiltered> {
+    return type ? { type, item: { [getTypeName(type)]: { model } } } : {};
+  }
+
+  getOrder(sort: string, direction: string): FindOptionsOrder<DealFiltered> {
+    return ['date', 'discount'].includes(sort)
+      ? { [sort]: direction === 'desc' ? 'DESC' : 'ASC' }
+      : { discount: 'DESC' };
+  }
+
+  private async getDeals(
+    where: FindOptionsWhere<DealFiltered> | FindOptionsWhere<DealFiltered>[],
+    order: FindOptionsOrder<DealFiltered>,
+    page: FindOptionsPage,
+    relations: FindOptionsRelations<DealFiltered>,
+  ): Promise<DealFiltered[]> {
     return this.dealFilteredRepository.find({
-      order: { date: 'DESC' },
+      where,
+      order,
+      ...page,
+      relations,
     });
   }
 
+  async getDealsByOptions(
+    options: FindOptionsWhere<DealFiltered>,
+    order: FindOptionsOrder<DealFiltered>,
+    page: FindOptionsPage,
+  ): Promise<DealFiltered[]> {
+    const where: FindOptionsWhere<DealFiltered> = {
+      ...options,
+      date: MoreThanOrEqual(addDays(new Date(), -3)),
+    };
+
+    const relations: FindOptionsRelations<DealFiltered> = {
+      item: {
+        macbook: { modelEntity: {} },
+        ipad: { modelEntity: {} },
+      },
+    };
+
+    return this.getDeals(where, order, page, relations);
+  }
+
   async getDeal(id: number): Promise<DealFiltered> {
-    return this.dealFilteredRepository.findOneOrFail({ where: { id } });
+    return this.dealFilteredRepository.findOneOrFail({
+      where: { id },
+      relations: {
+        item: {
+          macbook: { modelEntity: {} },
+          ipad: { modelEntity: {} },
+        },
+      },
+    });
   }
 
   async getDealImage(id: number): Promise<Buffer> {

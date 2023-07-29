@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsNumber } from 'class-validator';
 
-export class PriceParamRequestDto {
+export class ItemDto {
   @IsIn(['M', 'P'])
   type: string;
 
