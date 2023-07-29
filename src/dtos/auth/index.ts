@@ -1,3 +1,5 @@
+import { AuthLoginRequestDto } from './auth.login.req.dto';
 import { AuthRegisterRequestDto } from './auth.register.req.dto';
+import { AuthTokenResponseDto } from './auth.token.res.dto';
 
-export { AuthRegisterRequestDto };
+export { AuthLoginRequestDto, AuthRegisterRequestDto, AuthTokenResponseDto };

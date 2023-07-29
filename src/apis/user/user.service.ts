@@ -6,8 +6,12 @@ import { UserRepository } from 'src/repositories';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  private async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  async getUserByIdEmail(id: number, email: string): Promise<User> {
+    return this.userRepository.findOne({ where: { id, email } });
   }
 
   async createUser(user: Partial<User>): Promise<User> {
