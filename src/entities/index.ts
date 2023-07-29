@@ -4,6 +4,7 @@ import { ItemDetailEntity } from './item.detall.entity';
 import { Item } from './item.entity';
 import { ItemIpad } from './item.ipad.entity';
 import { ItemMacbook } from './item.macbook.entity';
+import { Model } from './model.entity';
 import { PriceTrade } from './price.trade.entity';
 
 export {
@@ -13,5 +14,6 @@ export {
   ItemMacbook,
   ItemIpad,
   ItemDetailEntity,
+  Model,
   PriceTrade,
 };

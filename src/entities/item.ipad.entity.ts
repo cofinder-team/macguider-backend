@@ -1,5 +1,7 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ItemDetailEntity } from './item.detall.entity';
+import { Item } from './item.entity';
+import { Model } from './model.entity';
 
 @Entity({ schema: 'macguider', name: 'item_ipad' })
 export class ItemIpad extends ItemDetailEntity {
@@ -11,4 +13,18 @@ export class ItemIpad extends ItemDetailEntity {
 
   @Column()
   cellular: boolean;
+
+  @ManyToOne(() => Model, (model) => model.ipadItems)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'model', referencedColumnName: 'id' },
+  ])
+  modelEntity: Model;
+
+  @OneToOne(() => Item, (item) => item.ipad)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'id', referencedColumnName: 'id' },
+  ])
+  item: Item;
 }

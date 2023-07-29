@@ -2,10 +2,15 @@ import {
   BaseEntity,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { Deal } from './deal.entity';
+import { Type } from './type.entity';
+import { ItemMacbook } from './item.macbook.entity';
+import { ItemIpad } from './item.ipad.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
@@ -14,6 +19,24 @@ export class Item extends BaseEntity {
 
   @PrimaryColumn()
   id: number;
+
+  @ManyToOne(() => Type, (type) => type.items)
+  @JoinColumn({ name: 'type', referencedColumnName: 'type' })
+  typeEntity: Type;
+
+  @OneToOne(() => ItemMacbook, (itemMacbook) => itemMacbook.item)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'id', referencedColumnName: 'id' },
+  ])
+  macbook: ItemMacbook;
+
+  @OneToOne(() => ItemIpad, (ItemIpad) => ItemIpad.item)
+  @JoinColumn([
+    { name: 'type', referencedColumnName: 'type' },
+    { name: 'id', referencedColumnName: 'id' },
+  ])
+  ipad: ItemIpad;
 
   @OneToMany(() => Deal, (deal) => deal.item)
   @JoinColumn([
