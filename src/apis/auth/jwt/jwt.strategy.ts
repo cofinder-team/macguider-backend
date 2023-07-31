@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/apis/user/user.service';
@@ -14,17 +14,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
+      secretOrKey: configService.get('JWT_SECRET_KEY'),
     });
   }
 
   async validate(token: TokenPayloadDto): Promise<TokenPayloadDto> {
     const { id } = token;
-    const user = await this.userService.getUserById(id);
-
-    if (!user) {
-      throw new UnauthorizedException('존재하지 않는 사용자 정보입니다.');
-    }
-    return token;
+    return this.userService.getUserById(id);
   }
 }
