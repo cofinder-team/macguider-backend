@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { createHash } from 'crypto';
 import { TokenPayloadDto } from 'src/dtos';
 import { User } from 'src/entities';
 
@@ -12,12 +13,18 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  private hashIfLong(target: string): string {
+    return target.length > 72
+      ? createHash('sha256').update(target).digest('hex')
+      : target;
+  }
+
   async hash(target: string): Promise<string> {
-    return bcrypt.hash(target, 10);
+    return bcrypt.hash(this.hashIfLong(target), 10);
   }
 
   async verifyHash(target: string, hashed: string): Promise<boolean> {
-    return bcrypt.compare(target, hashed);
+    return bcrypt.compare(this.hashIfLong(target), hashed);
   }
 
   async verifyLogin(user: User, password: string): Promise<boolean> {
