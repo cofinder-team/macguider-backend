@@ -65,7 +65,7 @@ export class DealController {
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
   ): Promise<AxiosResponse> {
-    const url = this.configService.get('SLACK_WEBHOOK_URL');
+    const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
     const { report } = body;
 
     const data = {

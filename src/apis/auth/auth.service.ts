@@ -56,7 +56,7 @@ export class AuthService {
 
   private signToken(payload: TokenPayloadDto, isRefresh?: boolean): string {
     const options: JwtSignOptions = isRefresh
-      ? { expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN') }
+      ? { expiresIn: this.configService.get<number>('JWT_REFRESH_EXPIRES_IN') }
       : {};
 
     return this.jwtService.sign(payload, options);
