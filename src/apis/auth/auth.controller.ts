@@ -4,6 +4,7 @@ import {
   Controller,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
@@ -12,8 +13,11 @@ import {
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
   AuthTokenResponseDto,
+  TokenPayloadDto,
   UserResponseDto,
 } from 'src/dtos';
+import { JwtAuthGuard } from './jwt/jwt.auth.guard';
+import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -87,5 +91,12 @@ export class AuthController {
     });
 
     return UserResponseDto.of(user);
+  }
+
+  @Post('/logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
+    const { id } = user;
+    await this.userService.updateUserToken(id, null);
   }
 }
