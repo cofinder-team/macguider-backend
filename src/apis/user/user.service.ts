@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TokenPayloadDto } from 'src/dtos';
 import { User } from 'src/entities';
 import { UserRepository } from 'src/repositories';
 
@@ -11,8 +10,8 @@ export class UserService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async getUserByIdEmail(id: number, email: string): Promise<User> {
-    return this.userRepository.findOne({ where: { id, email } });
+  async getUserById(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async createUser(user: Partial<User>): Promise<User> {
@@ -22,11 +21,5 @@ export class UserService {
   async checkDuplicationEmail(email: string): Promise<boolean> {
     const user = await this.getUserByEmail(email);
     return !user;
-  }
-
-  async verifyTokenUser(token: TokenPayloadDto): Promise<boolean> {
-    const { id, email } = token;
-    const user = await this.getUserByIdEmail(id, email);
-    return !!user;
   }
 }
