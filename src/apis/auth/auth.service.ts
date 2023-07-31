@@ -47,7 +47,9 @@ export class AuthService {
 
   async verifyToken(user: User, refreshToken: string): Promise<boolean> {
     if (!user) return false;
+
     const { refreshToken: hashedRefreshToken } = user;
+    if (!hashedRefreshToken) return false;
 
     return this.verifyHash(refreshToken, hashedRefreshToken);
   }
