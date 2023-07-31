@@ -22,4 +22,8 @@ export class UserService {
     const user = await this.getUserByEmail(email);
     return !user;
   }
+
+  async updateUserToken(id: number, refreshToken: string): Promise<void> {
+    await this.userRepository.update(id, { refreshToken });
+  }
 }
