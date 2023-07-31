@@ -39,7 +39,8 @@ export class AuthController {
     const accessToken = this.authService.generateAccessToken(user);
     const refreshToken = this.authService.generateRefreshToken(user);
 
-    /* TODO: save refresh token */
+    const hashedRefreshToken = await this.authService.hash(refreshToken);
+    await this.userService.updateUserToken(user.id, hashedRefreshToken);
 
     return { accessToken, refreshToken };
   }
@@ -55,9 +56,10 @@ export class AuthController {
       throw new BadRequestException('유효하지 않은 정보입니다.');
     }
 
-    const user = await this.userService.getUserById(decodedToken.id);
+    const { id } = decodedToken;
+    const user = await this.userService.getUserById(id);
     const isVerified = await this.authService.verifyToken(user, refreshToken);
-    if (isVerified) {
+    if (!isVerified) {
       throw new UnauthorizedException('인증되지 않은 정보입니다.');
     }
 
