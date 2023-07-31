@@ -9,6 +9,8 @@ import { ItemModule } from './apis/item/item.module';
 import { PriceModule } from './apis/price/price.module';
 import { AppController } from './app.controller';
 import { TerminusModule } from '@nestjs/terminus';
+import { AuthModule } from './apis/auth/auth.module';
+import { UserModule } from './apis/user/user.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { TerminusModule } from '@nestjs/terminus';
       namingStrategy: new SnakeNamingStrategy(),
       synchronize: false,
     }),
+    AuthModule,
+    UserModule,
     DealModule,
     ItemModule,
     PriceModule,
