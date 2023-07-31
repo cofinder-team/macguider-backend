@@ -1,4 +1,10 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import {
@@ -44,9 +50,15 @@ export class AuthController {
   ): Promise<AuthTokenResponseDto> {
     const { refreshToken } = payload;
 
-    const decodedToken = await this.authService.verifyToken(refreshToken);
-    if (!(decodedToken && this.userService.verifyTokenUser(decodedToken))) {
+    const decodedToken = await this.authService.decodeToken(refreshToken);
+    if (!decodedToken) {
       throw new BadRequestException('유효하지 않은 정보입니다.');
+    }
+
+    const user = await this.userService.getUserById(decodedToken.id);
+    const isVerified = await this.authService.verifyToken(user, refreshToken);
+    if (isVerified) {
+      throw new UnauthorizedException('인증되지 않은 정보입니다.');
     }
 
     const accessToken = this.authService.refreshAccessToken(decodedToken);
@@ -58,7 +70,7 @@ export class AuthController {
     @Body() body: AuthRegisterRequestDto,
   ): Promise<UserResponseDto> {
     const { email, password } = body;
-    const hashedPassword = await this.authService.hashPassword(password);
+    const hashedPassword = await this.authService.hash(password);
 
     const isDuplicated = await this.userService.checkDuplicationEmail(email);
     if (!isDuplicated) {

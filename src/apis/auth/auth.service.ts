@@ -12,25 +12,22 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
+  async hash(target: string): Promise<string> {
+    return bcrypt.hash(target, 10);
   }
 
-  async verifyPassword(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword);
+  async verifyHash(target: string, hashed: string): Promise<boolean> {
+    return bcrypt.compare(target, hashed);
   }
 
   async verifyLogin(user: User, password: string): Promise<boolean> {
     if (!user) return false;
     const { password: hashedPassword } = user;
 
-    return this.verifyPassword(password, hashedPassword);
+    return this.verifyHash(password, hashedPassword);
   }
 
-  async verifyToken(token: string): Promise<TokenPayloadDto | undefined> {
+  async decodeToken(token: string): Promise<TokenPayloadDto | undefined> {
     return this.jwtService
       .verifyAsync(token)
       .then((decoded) =>
@@ -39,6 +36,13 @@ export class AuthService {
           : undefined,
       )
       .catch(() => undefined);
+  }
+
+  async verifyToken(user: User, refreshToken: string): Promise<boolean> {
+    if (!user) return false;
+    const { refreshToken: hashedRefreshToken } = user;
+
+    return this.verifyHash(refreshToken, hashedRefreshToken);
   }
 
   private signToken(payload: TokenPayloadDto, isRefresh?: boolean): string {
@@ -61,9 +65,7 @@ export class AuthService {
     return this.signToken(payload, true);
   }
 
-  refreshAccessToken(token: any): string {
-    const { id, email } = token;
-    const payload: TokenPayloadDto = { id, email };
+  refreshAccessToken(payload: TokenPayloadDto): string {
     return this.signToken(payload);
   }
 }
