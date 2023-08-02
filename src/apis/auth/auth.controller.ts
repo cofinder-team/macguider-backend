@@ -18,12 +18,14 @@ import {
 } from 'src/dtos';
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
+import { MailService } from './mail/mail.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
   ) {}
 
   @Post('/login')
