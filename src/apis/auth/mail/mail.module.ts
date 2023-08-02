@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from './mail.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -19,6 +21,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         },
         defaults: {
           from: '"MacGuider" <admin@macguider.io>',
+        },
+        template: {
+          dir: join(__dirname, '../../../lib/templates/pages'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
         },
       }),
     }),
