@@ -19,6 +19,7 @@ import {
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
+import { v4 as randomUuid } from 'uuid';
 
 @Controller('auth')
 export class AuthController {
@@ -85,13 +86,14 @@ export class AuthController {
       throw new BadRequestException('이미 서비스에 가입된 이메일입니다.');
     }
 
-    /* TODO: send email verification */
-
+    const uuid = randomUuid();
     const user = await this.userService.createUser({
       email,
+      uuid: randomUuid(),
       password: hashedPassword,
     });
 
+    await this.mailService.sendCertificateMail(email, uuid);
     return UserResponseDto.of(user);
   }
 
