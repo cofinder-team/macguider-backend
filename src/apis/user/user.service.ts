@@ -14,6 +14,10 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  async getUserByUuid(uuid: string): Promise<User> {
+    return this.userRepository.findOne({ where: { uuid } });
+  }
+
   async createUser(user: Partial<User>): Promise<User> {
     return this.userRepository.create(user).save();
   }
@@ -25,5 +29,9 @@ export class UserService {
 
   async updateUserToken(id: number, refreshToken: string): Promise<void> {
     await this.userRepository.update(id, { refreshToken });
+  }
+
+  async certifyUser(id: number): Promise<void> {
+    await this.userRepository.update(id, { certified: true });
   }
 }

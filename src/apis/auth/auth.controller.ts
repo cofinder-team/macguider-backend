@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import {
+  AuthCertificateRequestDto,
   AuthLoginRequestDto,
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
@@ -102,5 +103,18 @@ export class AuthController {
   async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
+  }
+
+  @Post('/certificate')
+  async certificate(@Body() payload: AuthCertificateRequestDto): Promise<void> {
+    const { uuid } = payload;
+
+    const user = await this.userService.getUserByUuid(uuid);
+    if (!user) {
+      throw new BadRequestException('유효하지 않은 정보입니다.');
+    }
+
+    const { id } = user;
+    await this.userService.certifyUser(id);
   }
 }
