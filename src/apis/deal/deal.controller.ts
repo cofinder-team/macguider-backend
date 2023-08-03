@@ -37,9 +37,9 @@ export class DealController {
 
   @Get()
   async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
-    const { type, model, sort, direction, ...pagination } = query;
+    const { type, model, source, sort, direction, ...pagination } = query;
 
-    const options = this.dealService.getOptions(type, model);
+    const options = this.dealService.getOptions(type, model, source);
     const order = this.dealService.getOrder(sort, direction);
     const page = paginate(pagination);
 
@@ -108,7 +108,7 @@ export class DealController {
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
   ): Promise<AxiosResponse> {
-    const url = this.configService.get('SLACK_WEBHOOK_URL');
+    const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
     const { report } = body;
 
     const data = {
