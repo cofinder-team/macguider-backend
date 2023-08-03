@@ -7,6 +7,7 @@ import { ItemIpad } from './item-ipad.entity';
 import { ItemMacbook } from './item-macbook.entity';
 import { Model } from './model.entity';
 import { PriceTrade } from './price-trade.entity';
+import { User } from './user.entity';
 
 export {
   Deal,
@@ -18,4 +19,5 @@ export {
   ItemDetailEntity,
   Model,
   PriceTrade,
+  User,
 };

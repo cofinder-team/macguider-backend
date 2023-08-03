@@ -22,6 +22,27 @@ class EnvironmentVariables {
 
   @IsString()
   SLACK_WEBHOOK_URL: string;
+
+  @IsString()
+  JWT_SECRET_KEY: string;
+
+  @IsNumber()
+  JWT_EXPIRES_IN: number;
+
+  @IsNumber()
+  JWT_REFRESH_EXPIRES_IN: number;
+
+  @IsString()
+  MAIL_HOST: string;
+
+  @IsNumber()
+  MAIL_PORT: number;
+
+  @IsString()
+  MAIL_AUTH_USER: string;
+
+  @IsString()
+  MAIL_AUTH_PASS: string;
 }
 
 export const validateEnvironment = (config: Record<string, unknown>) => {

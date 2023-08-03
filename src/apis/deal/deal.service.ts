@@ -24,8 +24,19 @@ export class DealService {
     private readonly dealRawRepository: Repository<DealRaw>,
   ) {}
 
-  getOptions(type: string, model: number): FindOptionsWhere<DealFiltered> {
-    return type ? { type, item: { [getTypeName(type)]: { model } } } : {};
+  getOptions(
+    type: string,
+    model: number,
+    source: string,
+  ): FindOptionsWhere<DealFiltered> {
+    const options = type
+      ? { type, item: { [getTypeName(type)]: { model } } }
+      : {};
+
+    return {
+      ...options,
+      source,
+    };
   }
 
   getOrder(sort: string, direction: string): FindOptionsOrder<DealFiltered> {
