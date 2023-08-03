@@ -31,9 +31,9 @@ export class DealController {
 
   @Get()
   async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
-    const { type, model, sort, direction, ...pagination } = query;
+    const { type, model, source, sort, direction, ...pagination } = query;
 
-    const options = this.dealService.getOptions(type, model);
+    const options = this.dealService.getOptions(type, model, source);
     const order = this.dealService.getOrder(sort, direction);
     const page = paginate(pagination);
 
