@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import {
+  AuthCertificateRequestDto,
   AuthLoginRequestDto,
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
@@ -18,12 +19,15 @@ import {
 } from 'src/dtos';
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
+import { MailService } from './mail/mail.service';
+import { v4 as randomUuid } from 'uuid';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
   ) {}
 
   @Post('/login')
@@ -83,13 +87,14 @@ export class AuthController {
       throw new BadRequestException('이미 서비스에 가입된 이메일입니다.');
     }
 
-    /* TODO: send email verification */
-
+    const uuid = randomUuid();
     const user = await this.userService.createUser({
       email,
+      uuid: randomUuid(),
       password: hashedPassword,
     });
 
+    await this.mailService.sendCertificateMail(email, uuid);
     return UserResponseDto.of(user);
   }
 
@@ -98,5 +103,18 @@ export class AuthController {
   async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
+  }
+
+  @Post('/certificate')
+  async certificate(@Body() payload: AuthCertificateRequestDto): Promise<void> {
+    const { uuid } = payload;
+
+    const user = await this.userService.getUserByUuid(uuid);
+    if (!user) {
+      throw new BadRequestException('유효하지 않은 정보입니다.');
+    }
+
+    const { id } = user;
+    await this.userService.certifyUser(id);
   }
 }

@@ -1,3 +1,4 @@
+import { AuthCertificateRequestDto } from './auth.certificate.req.dto';
 import { AuthLoginRequestDto } from './auth.login.req.dto';
 import { AuthRefreshRequestDto } from './auth.refresh.req.dto';
 import { AuthRegisterRequestDto } from './auth.register.req.dto';
@@ -8,4 +9,5 @@ export {
   AuthRegisterRequestDto,
   AuthRefreshRequestDto,
   AuthTokenResponseDto,
+  AuthCertificateRequestDto,
 };
