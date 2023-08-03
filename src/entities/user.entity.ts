@@ -17,4 +17,7 @@ export class User extends BaseEntity {
 
   @Column()
   role: Role;
+
+  @Column({ type: 'uuid' })
+  uuid: string;
 }
