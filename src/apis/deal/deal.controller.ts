@@ -30,7 +30,9 @@ export class DealController {
   ) {}
 
   @Get()
-  async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
+  async getDeals(
+    @Query() query: DealRequestDto,
+  ): Promise<DealFilteredResponseDto[]> {
     const { type, model, source, sort, direction, ...pagination } = query;
 
     const options = this.dealService.getOptions(type, model, source);
@@ -43,7 +45,7 @@ export class DealController {
       page,
     );
 
-    return deals.map(DealResponseDto.of);
+    return deals.map(DealFilteredResponseDto.of);
   }
 
   @Get('/:id')

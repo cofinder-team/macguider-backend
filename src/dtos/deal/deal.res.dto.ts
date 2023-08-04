@@ -1,5 +1,6 @@
-import { Deal, ItemDetailEntity } from 'src/entities';
+import { Deal, DealFiltered, ItemDetailEntity } from 'src/entities';
 import { ItemResponseDto } from '../item';
+import { PriceTradeResponseDto } from '../price';
 
 abstract class DealAbstractResponseDto {
   id: number;
@@ -27,6 +28,15 @@ abstract class DealAbstractResponseDto {
       source,
       url,
     };
+  }
+}
+
+export class DealFilteredResponseDto extends DealAbstractResponseDto {
+  tradePrice: Pick<PriceTradeResponseDto, 'average'>;
+
+  static of(deal: DealFiltered): DealFilteredResponseDto {
+    const { average } = deal;
+    return { ...super.of(deal), tradePrice: { average } };
   }
 }
 
