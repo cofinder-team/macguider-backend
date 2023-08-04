@@ -21,6 +21,7 @@ import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
 import { v4 as randomUuid } from 'uuid';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -100,6 +101,7 @@ export class AuthController {
 
   @Post('/logout')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
