@@ -15,6 +15,7 @@ import {
   DealManageRequestDto,
   DealRawConvertRequestDto,
   DealRawResponseDto,
+  DealFilteredResponseDto,
   DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
@@ -26,17 +27,21 @@ import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios
 import { firstValueFrom, map } from 'rxjs';
 import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
+import { PriceService } from '../price/price.service';
 
 @Controller('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealService,
+    private readonly priceService: PriceService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
 
   @Get()
-  async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
+  async getDeals(
+    @Query() query: DealRequestDto,
+  ): Promise<DealFilteredResponseDto[]> {
     const { type, model, source, sort, direction, ...pagination } = query;
 
     const options = this.dealService.getOptions(type, model, source);
@@ -49,13 +54,26 @@ export class DealController {
       page,
     );
 
-    return deals.map(DealResponseDto.of);
+    return deals.map(DealFilteredResponseDto.of);
   }
 
   @Get('/:id')
   async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
     const deal = await this.dealService.getDeal(id);
-    return DealResponseDto.of(deal);
+    const { type, itemId } = deal;
+
+    const item = { type, id: itemId };
+    const regularPrice = await this.priceService.getRecentRegularPrice(item);
+    const coupangPrice = await this.priceService.getRecentCoupangPrice(item);
+    const tradePrice = await this.priceService.getRecentTradePrice(item);
+
+    return DealResponseDto.of(
+      Object.assign(deal, {
+        regularPrice,
+        coupangPrice,
+        tradePrice,
+      }),
+    );
   }
 
   @Get('/:id/image')

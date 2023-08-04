@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PriceService } from './price.service';
-import { PriceTradeRepository } from 'src/repositories';
 import { PriceController } from './price.controller';
+import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PriceTradeRepository])],
+  imports: [TypeOrmModule.forFeature([PriceRegular, PriceCoupang, PriceTrade])],
   controllers: [PriceController],
-  providers: [PriceService, PriceTradeRepository],
+  providers: [PriceService],
 })
 export class PriceModule {}
