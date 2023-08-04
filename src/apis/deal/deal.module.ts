@@ -6,10 +6,19 @@ import { DealService } from './deal.service';
 import { DealRaw } from 'src/entities';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { PriceService } from '../price/price.service';
+import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DealRepository, DealFilteredRepository, DealRaw]),
+    TypeOrmModule.forFeature([
+      PriceRegular,
+      PriceCoupang,
+      PriceTrade,
+      DealRepository,
+      DealFilteredRepository,
+      DealRaw,
+    ]),
     ConfigModule,
     HttpModule.registerAsync({
       useFactory: () => ({
@@ -19,6 +28,11 @@ import { HttpModule } from '@nestjs/axios';
     }),
   ],
   controllers: [DealController],
-  providers: [DealService, DealRepository, DealFilteredRepository],
+  providers: [
+    DealService,
+    PriceService,
+    DealRepository,
+    DealFilteredRepository,
+  ],
 })
 export class DealModule {}
