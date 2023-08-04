@@ -1,7 +1,7 @@
-import { DealFiltered, ItemDetailEntity } from 'src/entities';
+import { Deal, ItemDetailEntity } from 'src/entities';
 import { ItemResponseDto } from '../item';
 
-export class DealResponseDto {
+abstract class DealAbstractResponseDto {
   id: number;
   item?: ItemResponseDto;
   date: Date;
@@ -10,22 +10,9 @@ export class DealResponseDto {
   unused: boolean;
   source: string;
   url: string;
-  average: number;
-  discount: number;
 
-  static of(deal: DealFiltered): DealResponseDto {
-    const {
-      id,
-      item,
-      date,
-      price,
-      sold,
-      unused,
-      source,
-      url,
-      average,
-      discount,
-    } = deal;
+  static of(deal: Deal): DealAbstractResponseDto {
+    const { id, item, date, price, sold, unused, source, url } = deal;
 
     const { macbook, ipad } = item;
     const itemDetail: ItemDetailEntity = macbook || ipad || undefined;
@@ -39,8 +26,14 @@ export class DealResponseDto {
       unused,
       source,
       url,
-      average,
-      discount,
+    };
+  }
+}
+
+export class DealResponseDto extends DealAbstractResponseDto {
+  static of(deal: Deal): DealResponseDto {
+    return {
+      ...super.of(deal),
     };
   }
 }
