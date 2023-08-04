@@ -11,6 +11,7 @@ import {
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import {
+  DealFilteredResponseDto,
   DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
@@ -20,11 +21,13 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
+import { PriceService } from '../price/price.service';
 
 @Controller('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealService,
+    private readonly priceService: PriceService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
@@ -51,7 +54,20 @@ export class DealController {
   @Get('/:id')
   async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
     const deal = await this.dealService.getDeal(id);
-    return DealResponseDto.of(deal);
+    const { type, itemId } = deal;
+
+    const item = { type, id: itemId };
+    const regularPrice = await this.priceService.getRecentRegularPrice(item);
+    const coupangPrice = await this.priceService.getRecentCoupangPrice(item);
+    const tradePrice = await this.priceService.getRecentTradePrice(item);
+
+    return DealResponseDto.of(
+      Object.assign(deal, {
+        regularPrice,
+        coupangPrice,
+        tradePrice,
+      }),
+    );
   }
 
   @Get('/:id/image')

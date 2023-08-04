@@ -1,6 +1,14 @@
-import { Deal, DealFiltered, ItemDetailEntity } from 'src/entities';
+import {
+  Deal,
+  DealFiltered,
+  ItemDetailEntity,
+  PriceCoupang,
+  PriceRegular,
+  PriceTrade,
+} from 'src/entities';
 import { ItemResponseDto } from '../item';
-import { PriceTradeResponseDto } from '../price';
+import { PriceTradeResponseDto } from '../price/price.trade.res.dto';
+import { PriceCoupangResponseDto, PriceRegularResponseDto } from '../price';
 
 abstract class DealAbstractResponseDto {
   id: number;
@@ -41,9 +49,24 @@ export class DealFilteredResponseDto extends DealAbstractResponseDto {
 }
 
 export class DealResponseDto extends DealAbstractResponseDto {
-  static of(deal: Deal): DealResponseDto {
+  regularPrice: PriceRegularResponseDto;
+  coupangPrice: PriceCoupangResponseDto;
+  tradePrice: PriceTradeResponseDto;
+
+  static of(
+    deal: Deal & {
+      regularPrice: PriceRegular;
+      coupangPrice: PriceCoupang;
+      tradePrice: PriceTrade;
+    },
+  ): DealResponseDto {
+    const { regularPrice, coupangPrice, tradePrice } = deal;
+
     return {
       ...super.of(deal),
+      regularPrice: PriceRegularResponseDto.of(regularPrice),
+      coupangPrice: PriceCoupangResponseDto.of(coupangPrice),
+      tradePrice: PriceTradeResponseDto.of(tradePrice),
     };
   }
 }
