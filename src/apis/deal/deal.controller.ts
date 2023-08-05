@@ -90,6 +90,10 @@ export class DealController {
   }
 
   @Put('/:id')
+  @ApiOperation({
+    deprecated: true,
+    summary: '거래 정보 수정 및 삭제 (admin console only)',
+  })
   async manageDeal(
     @Param('id') id: number,
     @Body() body: DealManageRequestDto,
@@ -106,12 +110,20 @@ export class DealController {
   }
 
   @Get('/raw/:id')
+  @ApiOperation({
+    deprecated: true,
+    summary: '수집된 raw 거래 정보 확인 (deprecated)',
+  })
   async getDealRaw(@Param('id') id: number): Promise<DealRawResponseDto> {
     const dealRaw = await this.dealService.getDealRaw(id);
     return DealRawResponseDto.of(dealRaw);
   }
 
   @Put('/raw/:id')
+  @ApiOperation({
+    deprecated: true,
+    summary: '수집된 raw 정보를 거래 내역에 등록 (deprecated)',
+  })
   async convertDealFromRaw(
     @Param('id') id: number,
     @Body() body: DealRawConvertRequestDto,
