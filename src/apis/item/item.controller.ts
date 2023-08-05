@@ -9,6 +9,10 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
+  @ApiOperation({
+    deprecated: true,
+    summary: '전체 품목 및 옵션 목록 조회 (admin console only)',
+  })
   async getItems(): Promise<ItemResponseDto[]> {
     const items = await this.itemService.getItems();
     return items.map(ItemResponseDto.of);
