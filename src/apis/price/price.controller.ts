@@ -19,8 +19,7 @@ export class PriceController {
   async getRegularPrices(
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto[]> {
-    const { type, id } = item;
-    const options = { type, id };
+    const options = { ...item };
 
     const prices = await this.itemService.getRegularPrices(options);
     return prices.map(PriceRegularResponseDto.of);
@@ -31,8 +30,7 @@ export class PriceController {
   async getRecentRegularPrice(
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto> {
-    const { type, id } = item;
-    const options = { type, id };
+    const options = { ...item };
 
     const price = await this.itemService.getRecentRegularPrice(options);
     return PriceRegularResponseDto.of(price);
@@ -43,8 +41,7 @@ export class PriceController {
   async getCoupangPrices(
     @Param() item: ItemDto,
   ): Promise<PriceCoupangResponseDto[]> {
-    const { type, id } = item;
-    const options = { type, id };
+    const options = { ...item };
 
     const prices = await this.itemService.getCoupangPrices(options);
     return prices.map(PriceCoupangResponseDto.of);
@@ -55,8 +52,7 @@ export class PriceController {
   async getRecentCoupangPrice(
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto> {
-    const { type, id } = item;
-    const options = { type, id };
+    const options = { ...item };
 
     const price = await this.itemService.getRecentCoupangPrice(options);
     return PriceCoupangResponseDto.of(price);
@@ -68,10 +64,7 @@ export class PriceController {
     @Param() item: ItemDto,
     @Query() query: PriceTradeRequestDto,
   ): Promise<PriceTradeResponseDto[]> {
-    const { type, id } = item;
-    const { unused, source } = query;
-
-    const options = { type, id, unused, source };
+    const options = { ...item, ...query };
 
     const prices = await this.itemService.getTradePrices(options);
     return prices.map(PriceTradeResponseDto.of);
@@ -83,10 +76,7 @@ export class PriceController {
     @Param() item: ItemDto,
     @Query() query: PriceTradeRequestDto,
   ): Promise<PriceTradeResponseDto> {
-    const { type, id } = item;
-    const { unused, source } = query;
-
-    const options = { type, id, unused, source };
+    const options = { ...item, ...query };
 
     const price = await this.itemService.getRecentTradePrice(options);
     return PriceTradeResponseDto.of(price);
@@ -98,13 +88,10 @@ export class PriceController {
     deprecated: true,
   })
   async getPrice(
-    @Param() params: ItemDto,
+    @Param() item: ItemDto,
     @Query() query: PriceTradeRequestDto,
   ): Promise<PriceTradeResponseDto> {
-    const { type, id } = params;
-    const { unused } = query;
-
-    const options = { type, id, unused };
+    const options = { ...item, ...query };
 
     const price = await this.itemService.getRecentTradePrice(options);
     return PriceTradeResponseDto.of(price);
