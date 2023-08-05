@@ -7,6 +7,7 @@ import {
   PriceTradeRequestDto,
   PriceTradeResponseDto,
 } from 'src/dtos';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('price')
 export class PriceController {
@@ -85,6 +86,7 @@ export class PriceController {
   }
 
   @Get('/deal/:type/:id')
+  @ApiOperation({ deprecated: true })
   async getPrice(
     @Param() params: ItemDto,
     @Query() query: PriceTradeRequestDto,
