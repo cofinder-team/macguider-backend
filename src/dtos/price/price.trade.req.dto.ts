@@ -1,8 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import { PriceRequestDto } from './price.req.dto';
+import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
 
-export class PriceTradeRequestDto extends PriceRequestDto {
+export class PriceTradeRequestDto {
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
@@ -10,5 +9,6 @@ export class PriceTradeRequestDto extends PriceRequestDto {
 
   @IsOptional()
   @IsString()
+  @IsIn(['중고나라', '번개장터'])
   source?: string;
 }
