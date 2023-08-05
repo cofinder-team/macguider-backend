@@ -7,9 +7,10 @@ import {
   PriceTradeRequestDto,
   PriceTradeResponseDto,
 } from 'src/dtos';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('price')
+@ApiTags('price')
 export class PriceController {
   constructor(private readonly itemService: PriceService) {}
 

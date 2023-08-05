@@ -22,8 +22,10 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
 import { PriceService } from '../price/price.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('deal')
+@ApiTags('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealService,
