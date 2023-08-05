@@ -21,9 +21,10 @@ import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
 import { v4 as randomUuid } from 'uuid';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -32,6 +33,7 @@ export class AuthController {
   ) {}
 
   @Post('/login')
+  @ApiOperation({ summary: '로그인 및 Refresh Token 저장' })
   async login(
     @Body() payload: AuthLoginRequestDto,
   ): Promise<AuthTokenResponseDto> {
@@ -55,6 +57,7 @@ export class AuthController {
   }
 
   @Post('/refresh')
+  @ApiOperation({ summary: 'Refresh Token으로 Access Token 갱신' })
   async refresh(
     @Body() payload: AuthRefreshRequestDto,
   ): Promise<AuthTokenResponseDto> {
@@ -77,6 +80,7 @@ export class AuthController {
   }
 
   @Post('/register')
+  @ApiOperation({ summary: '회원 가입 및 인증 이메일 전송' })
   async register(
     @Body() body: AuthRegisterRequestDto,
   ): Promise<UserResponseDto> {
@@ -101,6 +105,7 @@ export class AuthController {
 
   @Post('/logout')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '로그아웃 및 Refresh Token 삭제' })
   @ApiBearerAuth()
   async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
     const { id } = user;
@@ -108,6 +113,7 @@ export class AuthController {
   }
 
   @Post('/certificate')
+  @ApiOperation({ summary: '회원 이메일 인증 처리' })
   async certificate(@Body() payload: AuthCertificateRequestDto): Promise<void> {
     const { uuid } = payload;
 
