@@ -32,7 +32,10 @@ async function bootstrap() {
   });
 
   if (env === 'dev') {
-    const config = new DocumentBuilder().setTitle('Macguider API').build();
+    const config = new DocumentBuilder()
+      .setTitle('Macguider API')
+      .addBearerAuth()
+      .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
   }
