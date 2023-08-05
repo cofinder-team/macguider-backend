@@ -22,8 +22,10 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
 import { PriceService } from '../price/price.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('deal')
+@ApiTags('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealService,
@@ -33,6 +35,7 @@ export class DealController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: '핫딜 조건에 해당하는 거래 목록 조회' })
   async getDeals(
     @Query() query: DealRequestDto,
   ): Promise<DealFilteredResponseDto[]> {
@@ -52,6 +55,7 @@ export class DealController {
   }
 
   @Get('/:id')
+  @ApiOperation({ summary: '거래 상세 정보 조회 (가격 정보 포함)' })
   async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
     const deal = await this.dealService.getDeal(id);
     const { type, itemId } = deal;
@@ -71,6 +75,7 @@ export class DealController {
   }
 
   @Get('/:id/image')
+  @ApiOperation({ summary: '거래 이미지 조회' })
   @Header('Content-Type', 'image/jpeg')
   async getDealImage(@Param('id') id: number) {
     const buffer = await this.dealService.getDealImage(id);
@@ -79,6 +84,7 @@ export class DealController {
   }
 
   @Post('/:id/report')
+  @ApiOperation({ summary: '거래 신고 및 Slack 알림 전송' })
   async reportDeal(
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,

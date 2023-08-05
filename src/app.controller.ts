@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckResult,
@@ -15,6 +16,7 @@ export class AppController {
 
   @Get()
   @HealthCheck()
+  @ApiOperation({ summary: '서버 상태 확인' })
   async main(): Promise<HealthCheckResult> {
     return this.healthCheckService.check([
       () => this.typeOrmHealthIndicator.pingCheck('database'),
