@@ -23,7 +23,7 @@ import { join } from 'path';
           from: '"MacGuider" <admin@macguider.io>',
         },
         template: {
-          dir: join(__dirname, '../../../lib/templates/pages'),
+          dir: join(__dirname, '../../../assets/templates/pages'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
