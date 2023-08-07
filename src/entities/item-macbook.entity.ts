@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { ItemDetailEntity } from './item.detall.entity';
+import { ItemDetailEntity } from './item-detall.entity';
 import { Item } from './item.entity';
 import { Model } from './model.entity';
 
