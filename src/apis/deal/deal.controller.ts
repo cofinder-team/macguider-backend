@@ -10,27 +10,38 @@ import {
 } from '@nestjs/common';
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
-import { DealRequestDto, DealResponseDto } from 'src/dtos';
+import {
+  DealFilteredResponseDto,
+  DealReportRequestDto,
+  DealRequestDto,
+  DealResponseDto,
+} from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { DealReportRequestDto } from 'src/dtos/deal/deal.report.req.dto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
+import { PriceService } from '../price/price.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('deal')
+@ApiTags('deal')
 export class DealController {
   constructor(
     private readonly dealService: DealService,
+    private readonly priceService: PriceService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
 
   @Get()
-  async getDeals(@Query() query: DealRequestDto): Promise<DealResponseDto[]> {
-    const { type, model, sort, direction, ...pagination } = query;
+  @ApiOperation({ summary: '핫딜 조건에 해당하는 거래 목록 조회' })
+  async getDeals(
+    @Query() query: DealRequestDto,
+  ): Promise<DealFilteredResponseDto[]> {
+    const { type, model, source, sort, direction, ...pagination } = query;
 
-    const options = this.dealService.getOptions(type, model);
+    const options = this.dealService.getOptions(type, model, source);
     const order = this.dealService.getOrder(sort, direction);
     const page = paginate(pagination);
 
@@ -40,16 +51,31 @@ export class DealController {
       page,
     );
 
-    return deals.map(DealResponseDto.of);
+    return deals.map(DealFilteredResponseDto.of);
   }
 
   @Get('/:id')
+  @ApiOperation({ summary: '거래 상세 정보 조회 (가격 정보 포함)' })
   async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
     const deal = await this.dealService.getDeal(id);
-    return DealResponseDto.of(deal);
+    const { type, itemId } = deal;
+
+    const item = { type, id: itemId };
+    const regularPrice = await this.priceService.getRecentRegularPrice(item);
+    const coupangPrice = await this.priceService.getRecentCoupangPrice(item);
+    const tradePrice = await this.priceService.getRecentTradePrice(item);
+
+    return DealResponseDto.of(
+      Object.assign(deal, {
+        regularPrice,
+        coupangPrice,
+        tradePrice,
+      }),
+    );
   }
 
   @Get('/:id/image')
+  @ApiOperation({ summary: '거래 이미지 조회' })
   @Header('Content-Type', 'image/jpeg')
   async getDealImage(@Param('id') id: number) {
     const buffer = await this.dealService.getDealImage(id);
@@ -58,11 +84,12 @@ export class DealController {
   }
 
   @Post('/:id/report')
+  @ApiOperation({ summary: '거래 신고 및 Slack 알림 전송' })
   async reportDeal(
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
   ): Promise<AxiosResponse> {
-    const url = this.configService.get('SLACK_WEBHOOK_URL');
+    const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
     const { report } = body;
 
     const data = {

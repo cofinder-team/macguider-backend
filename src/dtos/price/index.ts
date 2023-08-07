@@ -1,4 +1,11 @@
-import { PriceRequestDto } from './price.req.dto';
-import { PriceResponseDto } from './price.res.dto';
+import { PriceCoupangResponseDto } from './price.coupang.res.dto';
+import { PriceRegularResponseDto } from './price.regular.res.dto';
+import { PriceTradeRequestDto } from './price.trade.req.dto';
+import { PriceTradeResponseDto } from './price.trade.res.dto';
 
-export { PriceRequestDto, PriceResponseDto };
+export {
+  PriceRegularResponseDto,
+  PriceCoupangResponseDto,
+  PriceTradeRequestDto,
+  PriceTradeResponseDto,
+};
