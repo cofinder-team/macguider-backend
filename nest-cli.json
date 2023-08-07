@@ -4,7 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["/lib/templates/**/*"],
+    "assets": ["/assets/**/*"],
     "plugins": [
       {
         "name": "@nestjs/swagger",
