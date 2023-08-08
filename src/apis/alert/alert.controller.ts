@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AlertService } from './alert.service';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { TokenPayloadDto } from 'src/dtos';
@@ -42,7 +49,12 @@ export class AlertController {
 
     await this.itemService.existsItem(type, itemId);
 
+    if (this.alertService.getAlertByOption({ type, itemId, unused, userId })) {
+      throw new BadRequestException('이미 알림 대상으로 추가된 정보입니다.');
+    }
+
     const alert = { type, itemId, unused, userId, uuid: randomUuid() };
+
     const result = await this.alertService.createAlert(alert);
     return AlertResponseDto.of(result);
   }
