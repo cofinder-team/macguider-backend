@@ -10,6 +10,10 @@ export class ItemService {
     private readonly itemRepository: Repository<Item>,
   ) {}
 
+  async existsItem(type: string, id: number): Promise<void> {
+    await this.itemRepository.findOneOrFail({ where: { type, id } });
+  }
+
   async getItem(type: string, id: number): Promise<Item> {
     const where: FindOptionsWhere<Item> = { type, id };
     const relations: FindOptionsRelations<Item> = {
