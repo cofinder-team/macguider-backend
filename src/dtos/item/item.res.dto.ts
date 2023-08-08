@@ -1,20 +1,29 @@
-import { ItemDetailEntity } from 'src/entities';
+import { Item, ItemDetailEntity } from 'src/entities';
 import { ModelResponseDto } from './model.res.dto';
 
 export class ItemResponseDto {
   type: string;
   id: number;
-  model: Partial<ModelResponseDto>;
-  option: number;
-  details: object;
+  model?: ModelResponseDto;
+  option?: number;
+  details?: object;
 
-  static of(item: ItemDetailEntity): ItemResponseDto {
-    const { type, id, option, model: modelId, modelEntity, ...details } = item;
+  static of(item: Item): ItemResponseDto {
+    const { macbook, ipad } = item;
+    const itemDetail: ItemDetailEntity = macbook || ipad || undefined;
 
-    const model = modelEntity
-      ? ModelResponseDto.of(modelEntity)
-      : { id: modelId };
+    if (!itemDetail) {
+      const { type, id } = item;
+      return { type, id };
+    }
 
-    return { type, id, model, option, details };
+    const { type, id, option, model, modelEntity, ...details } = itemDetail;
+    return {
+      type,
+      id,
+      ...(model ? { model: ModelResponseDto.of(modelEntity) } : {}),
+      option,
+      details,
+    };
   }
 }

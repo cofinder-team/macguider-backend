@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { AuthModule } from './apis/auth/auth.module';
 import { UserModule } from './apis/user/user.module';
+import { AlertModule } from './apis/alert/alert.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { UserModule } from './apis/user/user.module';
     DealModule,
     ItemModule,
     PriceModule,
+    AlertModule,
     TerminusModule,
   ],
   controllers: [AppController],

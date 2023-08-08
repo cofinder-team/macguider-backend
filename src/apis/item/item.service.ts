@@ -1,42 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ItemDetailEntity, ItemIpad, ItemMacbook } from 'src/entities';
-import { ItemRepository } from 'src/repositories';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { ItemDto } from 'src/dtos';
+import { Item } from 'src/entities';
+import {
+  FindOptionsOrder,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class ItemService {
   constructor(
-    private readonly itemrepository: ItemRepository,
-    @InjectRepository(ItemMacbook)
-    private readonly itemMacbookRepository: Repository<ItemMacbook>,
-    @InjectRepository(ItemIpad)
-    private readonly itemIpadRepository: Repository<ItemIpad>,
+    @InjectRepository(Item)
+    private readonly itemRepository: Repository<Item>,
   ) {}
 
-  private findRepositoryByType(type: string): Repository<ItemDetailEntity> {
-    switch (type) {
-      case 'M':
-        return this.itemMacbookRepository;
-      case 'P':
-        return this.itemIpadRepository;
-      default:
-        throw new EntityNotFoundError(ItemDetailEntity, type);
-    }
+  async existsItem(item: ItemDto): Promise<void> {
+    await this.itemRepository.findOneOrFail({ where: { ...item } });
   }
 
-  async getItems(): Promise<ItemDetailEntity[]> {
-    const items = await this.itemrepository.find({
-      order: { type: 'ASC', id: 'ASC' },
-    });
-    return Promise.all(items.map(({ type, id }) => this.getItem(type, id)));
+  async getItems(): Promise<Item[]> {
+    const order: FindOptionsOrder<Item> = { type: 'ASC', id: 'ASC' };
+    const relations: FindOptionsRelations<Item> = {
+      macbook: { modelEntity: {} },
+      ipad: { modelEntity: {} },
+    };
+
+    return this.itemRepository.find({ order, relations });
   }
 
-  async getItem(type: string, id: number): Promise<ItemDetailEntity> {
-    const repository = this.findRepositoryByType(type);
-    return repository.findOneOrFail({
-      where: { id },
-      relations: ['modelEntity'],
-    });
+  async getItem(type: string, id: number): Promise<Item> {
+    const where: FindOptionsWhere<Item> = { type, id };
+    const relations: FindOptionsRelations<Item> = {
+      macbook: { modelEntity: {} },
+      ipad: { modelEntity: {} },
+    };
+
+    return this.itemRepository.findOneOrFail({ where, relations });
   }
 }
