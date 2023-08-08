@@ -15,7 +15,7 @@ export class DealRequestDto extends PaginationDto {
   @IsNumber()
   @Type(() => Number)
   @IsOptional()
-  option?: number;
+  itemId?: number;
 
   @IsIn(['중고나라', '번개장터'])
   @IsOptional()
