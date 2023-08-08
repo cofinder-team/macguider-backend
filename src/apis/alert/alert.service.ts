@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlertTarget } from 'src/entities';
-import { Repository } from 'typeorm';
+import {
+  FindOptionsOrder,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 
 @Injectable()
 export class AlertService {
@@ -9,6 +14,20 @@ export class AlertService {
     @InjectRepository(AlertTarget)
     private readonly alertTargetRepository: Repository<AlertTarget>,
   ) {}
+
+  async getAlertsByUser(userId: number): Promise<AlertTarget[]> {
+    const where: FindOptionsWhere<AlertTarget> = { userId };
+    const order: FindOptionsOrder<AlertTarget> = {
+      type: 'ASC',
+      itemId: 'ASC',
+      unused: 'ASC',
+    };
+    const relations: FindOptionsRelations<AlertTarget> = {
+      item: { macbook: { modelEntity: {} }, ipad: { modelEntity: {} } },
+    };
+
+    return this.alertTargetRepository.find({ where, order, relations });
+  }
 
   async createAlert(alert: Partial<AlertTarget>): Promise<AlertTarget> {
     return this.alertTargetRepository.create(alert).save();
