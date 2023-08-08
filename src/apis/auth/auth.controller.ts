@@ -14,7 +14,7 @@ import {
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
   AuthTokenResponseDto,
-  TokenPayloadDto,
+  AuthUserDto,
   UserResponseDto,
 } from 'src/dtos';
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
@@ -107,7 +107,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '로그아웃 및 Refresh Token 삭제' })
   @ApiBearerAuth()
-  async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
+  async logout(@AuthUser() user: AuthUserDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
   }

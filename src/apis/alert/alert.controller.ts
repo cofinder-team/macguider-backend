@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AlertService } from './alert.service';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
-import { TokenPayloadDto } from 'src/dtos';
+import { AuthUserDto } from 'src/dtos';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -34,9 +34,7 @@ export class AlertController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '사용자의 알림 대상인 옵션 목록 조회' })
   @ApiBearerAuth()
-  async getAlerts(
-    @AuthUser() user: TokenPayloadDto,
-  ): Promise<AlertResponseDto[]> {
+  async getAlerts(@AuthUser() user: AuthUserDto): Promise<AlertResponseDto[]> {
     const { id: userId } = user;
     const alerts = await this.alertService.getAlertsByUser(userId);
 
@@ -48,7 +46,7 @@ export class AlertController {
   @ApiOperation({ summary: '사용자의 알림 대상으로 옵션 추가' })
   @ApiBearerAuth()
   async createAlert(
-    @AuthUser() user: TokenPayloadDto,
+    @AuthUser() user: AuthUserDto,
     @Body() body: AlertCreateRequestDto,
   ): Promise<AlertResponseDto> {
     const { id: userId } = user;
@@ -71,7 +69,7 @@ export class AlertController {
   @ApiOperation({ summary: '사용자의 알림 대상을 삭제' })
   @ApiBearerAuth()
   async removeAlert(
-    @AuthUser() user: TokenPayloadDto,
+    @AuthUser() user: AuthUserDto,
     @Param('id') id: number,
   ): Promise<void> {
     const { id: userId } = user;
