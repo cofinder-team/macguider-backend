@@ -20,8 +20,8 @@ import {
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
-import { v4 as randomUuid } from 'uuid';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { randomUuid } from 'src/lib/utils/uuid.util';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -95,7 +95,7 @@ export class AuthController {
     const uuid = randomUuid();
     const user = await this.userService.createUser({
       email,
-      uuid: randomUuid(),
+      uuid,
       password: hashedPassword,
     });
 
