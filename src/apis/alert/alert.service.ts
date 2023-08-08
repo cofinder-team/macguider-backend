@@ -9,4 +9,8 @@ export class AlertService {
     @InjectRepository(AlertTarget)
     private readonly alertTargetRepository: Repository<AlertTarget>,
   ) {}
+
+  async createAlert(alert: Partial<AlertTarget>): Promise<AlertTarget> {
+    return this.alertTargetRepository.create(alert).save();
+  }
 }
