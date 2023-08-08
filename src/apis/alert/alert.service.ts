@@ -29,21 +29,25 @@ export class AlertService {
     return this.alertTargetRepository.find({ where, order, relations });
   }
 
-  async getAlertByOption(
+  async getAlertByOptions(
     option: FindOptionsWhere<AlertTarget>,
   ): Promise<AlertTarget> {
     return this.alertTargetRepository.findOne({ where: option });
   }
 
-  async existsAlertByUuid(uuid: string): Promise<void> {
-    await this.alertTargetRepository.findOneOrFail({ where: { uuid } });
+  async existsAlert(
+    options: FindOptionsWhere<AlertTarget>,
+  ): Promise<AlertTarget> {
+    return this.alertTargetRepository.findOneOrFail({ where: { ...options } });
   }
 
   async createAlert(alert: Partial<AlertTarget>): Promise<AlertTarget> {
     return this.alertTargetRepository.create(alert).save();
   }
 
-  async removeAlertByUuid(uuid: string): Promise<void> {
-    await this.alertTargetRepository.delete({ uuid });
+  async removeAlertByOptions(
+    options: FindOptionsWhere<AlertTarget>,
+  ): Promise<void> {
+    await this.alertTargetRepository.delete({ ...options });
   }
 }

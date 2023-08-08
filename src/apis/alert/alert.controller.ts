@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -55,7 +56,7 @@ export class AlertController {
 
     await this.itemService.existsItem({ type, id: itemId });
 
-    if (this.alertService.getAlertByOption({ type, itemId, unused, userId })) {
+    if (this.alertService.getAlertByOptions({ type, itemId, unused, userId })) {
       throw new BadRequestException('이미 알림 대상으로 추가된 정보입니다.');
     }
 
@@ -65,11 +66,33 @@ export class AlertController {
     return AlertResponseDto.of(result);
   }
 
-  @Delete('/:uuid')
-  @ApiOperation({ summary: '특정 알림 삭제' })
-  async removeAlert(@Param() { uuid }: AlertRemoveRequestDto): Promise<void> {
-    await this.alertService.existsAlertByUuid(uuid);
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '사용자의 알림 대상을 삭제' })
+  @ApiBearerAuth()
+  async removeAlert(
+    @AuthUser() user: TokenPayloadDto,
+    @Param('id') id: number,
+  ): Promise<void> {
+    const { id: userId } = user;
+    const options = { id };
 
-    await this.alertService.removeAlertByUuid(uuid);
+    const alert = await this.alertService.existsAlert(options);
+    if (alert.userId !== userId) {
+      throw new ForbiddenException('권한이 없습니다.');
+    }
+
+    await this.alertService.removeAlertByOptions(options);
+  }
+
+  @Delete('/code/:uuid')
+  @ApiOperation({ summary: 'UUID로 특정 알림 대상을 삭제' })
+  async removeAlertByUuid(
+    @Param() param: AlertRemoveRequestDto,
+  ): Promise<void> {
+    const options = { ...param };
+    await this.alertService.existsAlert(options);
+
+    await this.alertService.removeAlertByOptions(options);
   }
 }
