@@ -29,6 +29,12 @@ export class AlertService {
     return this.alertTargetRepository.find({ where, order, relations });
   }
 
+  async getAlertByOption(
+    option: FindOptionsWhere<AlertTarget>,
+  ): Promise<AlertTarget> {
+    return this.alertTargetRepository.findOne({ where: option });
+  }
+
   async createAlert(alert: Partial<AlertTarget>): Promise<AlertTarget> {
     return this.alertTargetRepository.create(alert).save();
   }
