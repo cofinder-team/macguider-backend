@@ -9,12 +9,15 @@ export class ItemResponseDto {
   details?: object;
 
   static of(item: Item): ItemResponseDto {
-    const { type, id, macbook, ipad } = item;
-
+    const { macbook, ipad } = item;
     const itemDetail: ItemDetailEntity = macbook || ipad || undefined;
-    if (!itemDetail) return { type, id };
 
-    const { option, model, modelEntity, ...details } = itemDetail;
+    if (!itemDetail) {
+      const { type, id } = item;
+      return { type, id };
+    }
+
+    const { type, id, option, model, modelEntity, ...details } = itemDetail;
     return {
       type,
       id,
