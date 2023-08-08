@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/apis/user/user.service';
-import { TokenPayloadDto } from 'src/dtos';
+import { AuthUserDto, TokenPayloadDto } from 'src/dtos';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(token: TokenPayloadDto): Promise<TokenPayloadDto> {
+  async validate(token: TokenPayloadDto): Promise<AuthUserDto> {
     const { id } = token;
     return this.userService.getUserById(id);
   }

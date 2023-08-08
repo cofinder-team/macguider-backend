@@ -14,14 +14,14 @@ import {
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
   AuthTokenResponseDto,
-  TokenPayloadDto,
+  AuthUserDto,
   UserResponseDto,
 } from 'src/dtos';
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
-import { v4 as randomUuid } from 'uuid';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { randomUuid } from 'src/lib/utils/uuid.util';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -95,7 +95,7 @@ export class AuthController {
     const uuid = randomUuid();
     const user = await this.userService.createUser({
       email,
-      uuid: randomUuid(),
+      uuid,
       password: hashedPassword,
     });
 
@@ -107,7 +107,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '로그아웃 및 Refresh Token 삭제' })
   @ApiBearerAuth()
-  async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
+  async logout(@AuthUser() user: AuthUserDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
   }

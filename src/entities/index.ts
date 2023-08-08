@@ -9,8 +9,10 @@ import { PriceTrade } from './price-trade.entity';
 import { User } from './user.entity';
 import { PriceRegular } from './price-regular.entity';
 import { PriceCoupang } from './price-coupang.entity';
+import { AlertTarget } from './alert-target.entity';
 
 export {
+  AlertTarget,
   Deal,
   DealFiltered,
   Item,
