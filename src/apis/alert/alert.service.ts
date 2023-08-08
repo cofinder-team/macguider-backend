@@ -35,7 +35,15 @@ export class AlertService {
     return this.alertTargetRepository.findOne({ where: option });
   }
 
+  async existsAlertByUuid(uuid: string): Promise<void> {
+    await this.alertTargetRepository.findOneOrFail({ where: { uuid } });
+  }
+
   async createAlert(alert: Partial<AlertTarget>): Promise<AlertTarget> {
     return this.alertTargetRepository.create(alert).save();
+  }
+
+  async removeAlertByUuid(uuid: string): Promise<void> {
+    await this.alertTargetRepository.delete({ uuid });
   }
 }
