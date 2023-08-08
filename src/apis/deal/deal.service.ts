@@ -21,10 +21,11 @@ export class DealService {
   getOptions(
     type: string,
     model: number,
+    itemId: number,
     source: string,
   ): FindOptionsWhere<DealFiltered> {
     const options = type
-      ? { type, item: { [getTypeName(type)]: { model } } }
+      ? { type, itemId, item: { [getTypeName(type)]: { model } } }
       : {};
 
     return {
