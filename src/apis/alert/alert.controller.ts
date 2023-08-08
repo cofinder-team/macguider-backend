@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -11,7 +13,11 @@ import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { TokenPayloadDto } from 'src/dtos';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AlertCreateRequestDto, AlertResponseDto } from 'src/dtos/alert';
+import {
+  AlertCreateRequestDto,
+  AlertRemoveRequestDto,
+  AlertResponseDto,
+} from 'src/dtos';
 import { randomUuid } from 'src/lib/utils/uuid.util';
 import { ItemService } from '../item/item.service';
 
@@ -25,7 +31,7 @@ export class AlertController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: '사용자의 알림 대상 옵션 조회' })
+  @ApiOperation({ summary: '사용자의 알림 대상인 옵션 목록 조회' })
   @ApiBearerAuth()
   async getAlerts(
     @AuthUser() user: TokenPayloadDto,
@@ -38,7 +44,7 @@ export class AlertController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: '사용자의 알림 대상 옵션 추가' })
+  @ApiOperation({ summary: '사용자의 알림 대상으로 옵션 추가' })
   @ApiBearerAuth()
   async createAlert(
     @AuthUser() user: TokenPayloadDto,
@@ -57,5 +63,13 @@ export class AlertController {
 
     const result = await this.alertService.createAlert(alert);
     return AlertResponseDto.of(result);
+  }
+
+  @Delete('/:uuid')
+  @ApiOperation({ summary: '특정 알림 삭제' })
+  async removeAlert(@Param() { uuid }: AlertRemoveRequestDto): Promise<void> {
+    await this.alertService.existsAlertByUuid(uuid);
+
+    await this.alertService.removeAlertByUuid(uuid);
   }
 }
