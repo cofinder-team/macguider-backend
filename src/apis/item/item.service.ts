@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ItemDto } from 'src/dtos';
 import { Item } from 'src/entities';
 import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 
@@ -10,8 +11,8 @@ export class ItemService {
     private readonly itemRepository: Repository<Item>,
   ) {}
 
-  async existsItem(type: string, id: number): Promise<void> {
-    await this.itemRepository.findOneOrFail({ where: { type, id } });
+  async existsItem(item: ItemDto): Promise<void> {
+    await this.itemRepository.findOneOrFail({ where: { ...item } });
   }
 
   async getItem(type: string, id: number): Promise<Item> {
