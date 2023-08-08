@@ -53,7 +53,7 @@ export class AlertController {
     const { id: userId } = user;
     const { type, id: itemId, unused } = body;
 
-    await this.itemService.existsItem(type, itemId);
+    await this.itemService.existsItem({ type, id: itemId });
 
     if (this.alertService.getAlertByOption({ type, itemId, unused, userId })) {
       throw new BadRequestException('이미 알림 대상으로 추가된 정보입니다.');
