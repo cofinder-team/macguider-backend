@@ -4,7 +4,6 @@ import { Deal, DealFiltered, DealRaw } from 'src/entities';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
 import { getTypeName } from 'src/lib/utils/type.util';
-import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import {
   DeleteResult,
   FindOptionsOrder,
@@ -18,8 +17,10 @@ import {
 @Injectable()
 export class DealService {
   constructor(
-    private readonly dealRepository: DealRepository,
-    private readonly dealFilteredRepository: DealFilteredRepository,
+    @InjectRepository(Deal)
+    private readonly dealRepository: Repository<Deal>,
+    @InjectRepository(DealFiltered)
+    private readonly dealFilteredRepository: Repository<DealFiltered>,
     @InjectRepository(DealRaw)
     private readonly dealRawRepository: Repository<DealRaw>,
   ) {}
