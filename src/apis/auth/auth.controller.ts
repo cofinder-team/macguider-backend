@@ -13,15 +13,16 @@ import {
   AuthLoginRequestDto,
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
+  AuthResendRequestDto,
   AuthTokenResponseDto,
-  TokenPayloadDto,
+  AuthUserDto,
   UserResponseDto,
 } from 'src/dtos';
 import { JwtAuthGuard } from './jwt/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
-import { v4 as randomUuid } from 'uuid';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { randomUuid } from 'src/lib/utils/uuid.util';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -95,7 +96,7 @@ export class AuthController {
     const uuid = randomUuid();
     const user = await this.userService.createUser({
       email,
-      uuid: randomUuid(),
+      uuid,
       password: hashedPassword,
     });
 
@@ -103,11 +104,27 @@ export class AuthController {
     return UserResponseDto.of(user);
   }
 
+  @Post('/resend')
+  @ApiOperation({ summary: '인증 이메일 재전송 및 기존 이메일 만료' })
+  async resend(@Body() body: AuthResendRequestDto): Promise<void> {
+    const { email } = body;
+
+    const user = await this.userService.getUserByEmail(email);
+    if (user && user.certified) {
+      throw new BadRequestException('이미 가입이 완료된 이메일입니다.');
+    }
+
+    const uuid = randomUuid();
+    await this.userService.updateUserUuid(user.id, uuid);
+
+    await this.mailService.sendCertificateMail(email, uuid);
+  }
+
   @Post('/logout')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '로그아웃 및 Refresh Token 삭제' })
   @ApiBearerAuth()
-  async logout(@AuthUser() user: TokenPayloadDto): Promise<void> {
+  async logout(@AuthUser() user: AuthUserDto): Promise<void> {
     const { id } = user;
     await this.userService.updateUserToken(id, null);
   }

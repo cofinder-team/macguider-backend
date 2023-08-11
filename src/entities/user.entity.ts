@@ -1,5 +1,13 @@
 import { Role } from 'src/lib/types/role.type';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AlertTarget } from './alert-target.entity';
 
 @Entity({ schema: 'macguider', name: 'user' })
 export class User extends BaseEntity {
@@ -23,4 +31,8 @@ export class User extends BaseEntity {
 
   @Column()
   certified: boolean;
+
+  @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.user)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  alertTargets: AlertTarget[];
 }

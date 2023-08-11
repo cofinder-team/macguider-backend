@@ -4,13 +4,18 @@ import {
   Get,
   Header,
   Param,
+  Put,
   Post,
   Query,
   StreamableFile,
+  UseGuards,
 } from '@nestjs/common';
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
 import {
+  DealManageRequestDto,
+  DealRawConvertRequestDto,
+  DealRawResponseDto,
   DealFilteredResponseDto,
   DealReportRequestDto,
   DealRequestDto,
@@ -21,8 +26,13 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
+import { EntityNotFoundError } from 'typeorm';
+import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { RoleGuard } from '../auth/jwt/role.guard';
+import { Role } from 'src/lib/types/role.type';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -39,9 +49,10 @@ export class DealController {
   async getDeals(
     @Query() query: DealRequestDto,
   ): Promise<DealFilteredResponseDto[]> {
-    const { type, model, source, sort, direction, ...pagination } = query;
+    const { type, model, itemId, source, sort, direction, ...pagination } =
+      query;
 
-    const options = this.dealService.getOptions(type, model, source);
+    const options = this.dealService.getOptions(type, model, itemId, source);
     const order = this.dealService.getOrder(sort, direction);
     const page = paginate(pagination);
 
@@ -83,6 +94,59 @@ export class DealController {
     return new StreamableFile(readable);
   }
 
+  @Put('/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({
+    summary: '거래 정보 수정 및 삭제 (Admin Console [Manage] 전용)',
+  })
+  @ApiBearerAuth()
+  async manageDeal(
+    @Param('id') id: number,
+    @Body() body: DealManageRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDeal(id);
+
+    const { remove, ...payload } = body;
+
+    const { affected } = await (remove
+      ? this.dealService.deleteDeal(id)
+      : this.dealService.updateDeal(id, payload));
+
+    if (!affected) throw new EntityNotFoundError(Deal, id);
+  }
+
+  @Get('/raw/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({
+    summary: '수집된 raw 거래 정보 확인 (Admin Console [Raw] 전용)',
+  })
+  @ApiBearerAuth()
+  async getDealRaw(@Param('id') id: number): Promise<DealRawResponseDto> {
+    const dealRaw = await this.dealService.getDealRaw(id);
+    return DealRawResponseDto.of(dealRaw);
+  }
+
+  @Put('/raw/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({
+    deprecated: true,
+    summary: '수집된 raw 정보를 거래 내역에 등록 (Admin Console [Raw] 전용)',
+  })
+  @ApiBearerAuth()
+  async convertDealFromRaw(
+    @Param('id') id: number,
+    @Body() body: DealRawConvertRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDealRaw(id);
+
+    const { valid, ...payload } = body;
+    if (valid) {
+      await this.dealService.createDeal(id, payload);
+    }
+
+    await this.dealService.classifyDealRaw(id);
+  }
+
   @Post('/:id/report')
   @ApiOperation({ summary: '거래 신고 및 Slack 알림 전송' })
   async reportDeal(
@@ -95,7 +159,7 @@ export class DealController {
     const data = {
       channel: 'hotdeal-alert',
       username: 'User Report',
-      text: `[Report] #${id}\n${report}\nhttps://dev.macguider.io/deals/report/${id}`,
+      text: `[Report] #${id}\n${report}\nhttps://www.macguider.io/deals/report/${id}`,
     };
 
     return firstValueFrom(

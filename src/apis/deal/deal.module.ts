@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import { DealController } from './deal.controller';
 import { DealService } from './deal.service';
+import { Deal, DealFiltered, DealRaw, User } from 'src/entities';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { PriceService } from '../price/price.service';
@@ -14,8 +14,10 @@ import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
       PriceRegular,
       PriceCoupang,
       PriceTrade,
-      DealRepository,
-      DealFilteredRepository,
+      Deal,
+      DealFiltered,
+      DealRaw,
+      User,
     ]),
     ConfigModule,
     HttpModule.registerAsync({
@@ -26,11 +28,6 @@ import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
     }),
   ],
   controllers: [DealController],
-  providers: [
-    DealService,
-    PriceService,
-    DealRepository,
-    DealFilteredRepository,
-  ],
+  providers: [DealService, PriceService],
 })
 export class DealModule {}
