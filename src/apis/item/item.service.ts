@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ItemDto } from 'src/dtos';
+import { ItemDto, ItemOptionsDto } from 'src/dtos';
 import { Item } from 'src/entities';
+import { getTypeName } from 'src/lib/utils/type.util';
 import {
+  DataSource,
   FindOptionsOrder,
   FindOptionsRelations,
   FindOptionsWhere,
@@ -11,23 +13,44 @@ import {
 
 @Injectable()
 export class ItemService {
+  getEntityColumns: (entity: string) => string[];
+
   constructor(
+    dataSource: DataSource,
     @InjectRepository(Item)
     private readonly itemRepository: Repository<Item>,
-  ) {}
+  ) {
+    this.getEntityColumns = (entity: string) =>
+      dataSource
+        .getMetadata(entity)
+        .columns.map((column) => column.propertyName);
+  }
 
   async existsItem(item: ItemDto): Promise<void> {
     await this.itemRepository.findOneOrFail({ where: { ...item } });
   }
 
-  async getItems(): Promise<Item[]> {
+  getOptions(
+    type: string,
+    model: number,
+    details: ItemOptionsDto,
+  ): FindOptionsWhere<Item> {
+    const options = {
+      ...(type ? { type, [getTypeName(type)]: { model, ...details } } : {}),
+    };
+
+    return options;
+  }
+
+  async getItems(options: FindOptionsWhere<Item>): Promise<Item[]> {
+    const where: FindOptionsWhere<Item> = { ...options };
     const order: FindOptionsOrder<Item> = { type: 'ASC', id: 'ASC' };
     const relations: FindOptionsRelations<Item> = {
       macbook: { modelEntity: {} },
       ipad: { modelEntity: {} },
     };
 
-    return this.itemRepository.find({ order, relations });
+    return this.itemRepository.find({ where, order, relations });
   }
 
   async getItem(type: string, id: number): Promise<Item> {
