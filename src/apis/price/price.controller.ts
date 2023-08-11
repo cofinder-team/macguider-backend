@@ -8,11 +8,15 @@ import {
   PriceTradeResponseDto,
 } from 'src/dtos';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ItemService } from '../item/item.service';
 
 @Controller('price')
 @ApiTags('price')
 export class PriceController {
-  constructor(private readonly itemService: PriceService) {}
+  constructor(
+    private readonly priceService: PriceService,
+    private readonly itemService: ItemService,
+  ) {}
 
   @Get('/regular/:type/:id')
   @ApiOperation({ summary: '최근 1년간 정가 정보 조회' })
@@ -20,8 +24,9 @@ export class PriceController {
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto[]> {
     const options = { ...item };
+    await this.itemService.existsItem(item);
 
-    const prices = await this.itemService.getRegularPrices(options);
+    const prices = await this.priceService.getRegularPrices(options);
     return prices.map(PriceRegularResponseDto.of);
   }
 
@@ -31,8 +36,9 @@ export class PriceController {
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto> {
     const options = { ...item };
+    await this.itemService.existsItem(item);
 
-    const price = await this.itemService.getRecentRegularPrice(options);
+    const price = await this.priceService.getRecentRegularPrice(options);
     return PriceRegularResponseDto.of(price);
   }
 
@@ -42,8 +48,9 @@ export class PriceController {
     @Param() item: ItemDto,
   ): Promise<PriceCoupangResponseDto[]> {
     const options = { ...item };
+    await this.itemService.existsItem(item);
 
-    const prices = await this.itemService.getCoupangPrices(options);
+    const prices = await this.priceService.getCoupangPrices(options);
     return prices.map(PriceCoupangResponseDto.of);
   }
 
@@ -53,8 +60,9 @@ export class PriceController {
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto> {
     const options = { ...item };
+    await this.itemService.existsItem(item);
 
-    const price = await this.itemService.getRecentCoupangPrice(options);
+    const price = await this.priceService.getRecentCoupangPrice(options);
     return PriceCoupangResponseDto.of(price);
   }
 
@@ -65,8 +73,9 @@ export class PriceController {
     @Query() query: PriceTradeRequestDto,
   ): Promise<PriceTradeResponseDto[]> {
     const options = { ...item, ...query };
+    await this.itemService.existsItem(item);
 
-    const prices = await this.itemService.getTradePrices(options);
+    const prices = await this.priceService.getTradePrices(options);
     return prices.map(PriceTradeResponseDto.of);
   }
 
@@ -77,23 +86,9 @@ export class PriceController {
     @Query() query: PriceTradeRequestDto,
   ): Promise<PriceTradeResponseDto> {
     const options = { ...item, ...query };
+    await this.itemService.existsItem(item);
 
-    const price = await this.itemService.getRecentTradePrice(options);
-    return PriceTradeResponseDto.of(price);
-  }
-
-  @Get('/deal/:type/:id')
-  @ApiOperation({
-    summary: '임시 거래 가격 조회 (deprecated)',
-    deprecated: true,
-  })
-  async getPrice(
-    @Param() item: ItemDto,
-    @Query() query: PriceTradeRequestDto,
-  ): Promise<PriceTradeResponseDto> {
-    const options = { ...item, ...query };
-
-    const price = await this.itemService.getRecentTradePrice(options);
+    const price = await this.priceService.getRecentTradePrice(options);
     return PriceTradeResponseDto.of(price);
   }
 }

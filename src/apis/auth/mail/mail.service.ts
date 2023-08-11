@@ -10,9 +10,7 @@ export class MailService {
       to: email,
       subject: '[MacGuider] 회원가입 이메일 인증 안내입니다.',
       template: 'certificate',
-      context: {
-        url: `https://www.macguider.io/certificate/${uuid}`,
-      },
+      context: { uuid },
     });
   }
 }

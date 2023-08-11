@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities';
-import { UserRepository } from 'src/repositories';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   async getUserByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({ where: { email } });
@@ -29,6 +33,10 @@ export class UserService {
 
   async updateUserToken(id: number, refreshToken: string): Promise<void> {
     await this.userRepository.update(id, { refreshToken });
+  }
+
+  async updateUserUuid(id: number, uuid: string): Promise<void> {
+    await this.userRepository.update(id, { uuid });
   }
 
   async certifyUser(id: number): Promise<void> {

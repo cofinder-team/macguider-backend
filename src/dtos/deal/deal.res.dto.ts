@@ -1,7 +1,6 @@
 import {
   Deal,
   DealFiltered,
-  ItemDetailEntity,
   PriceCoupang,
   PriceRegular,
   PriceTrade,
@@ -12,7 +11,7 @@ import { PriceCoupangResponseDto, PriceRegularResponseDto } from '../price';
 
 abstract class DealAbstractResponseDto {
   id: number;
-  item?: ItemResponseDto;
+  item: ItemResponseDto;
   date: Date;
   price: number;
   sold: boolean;
@@ -21,14 +20,12 @@ abstract class DealAbstractResponseDto {
   url: string;
 
   static of(deal: Deal): DealAbstractResponseDto {
-    const { id, item, date, price, sold, unused, source, url } = deal;
-
-    const { macbook, ipad } = item;
-    const itemDetail: ItemDetailEntity = macbook || ipad || undefined;
+    const { id, type, itemId, item, date, price, sold, unused, source, url } =
+      deal;
 
     return {
       id,
-      item: ItemResponseDto.of(itemDetail),
+      item: { ...(item ? ItemResponseDto.of(item) : { type, id: itemId }) },
       date,
       price,
       sold,

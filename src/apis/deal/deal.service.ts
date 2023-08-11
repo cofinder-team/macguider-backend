@@ -1,30 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { Deal, DealFiltered } from 'src/entities';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Deal, DealFiltered, DealRaw } from 'src/entities';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
 import { getTypeName } from 'src/lib/utils/type.util';
-import { DealFilteredRepository, DealRepository } from 'src/repositories';
 import {
+  DeleteResult,
   FindOptionsOrder,
   FindOptionsRelations,
   FindOptionsWhere,
   MoreThanOrEqual,
+  Repository,
+  UpdateResult,
 } from 'typeorm';
 
 @Injectable()
 export class DealService {
   constructor(
-    private readonly dealRepository: DealRepository,
-    private readonly dealFilteredRepository: DealFilteredRepository,
+    @InjectRepository(Deal)
+    private readonly dealRepository: Repository<Deal>,
+    @InjectRepository(DealFiltered)
+    private readonly dealFilteredRepository: Repository<DealFiltered>,
+    @InjectRepository(DealRaw)
+    private readonly dealRawRepository: Repository<DealRaw>,
   ) {}
 
   getOptions(
     type: string,
     model: number,
+    itemId: number,
     source: string,
   ): FindOptionsWhere<DealFiltered> {
     const options = type
-      ? { type, item: { [getTypeName(type)]: { model } } }
+      ? { type, itemId, item: { [getTypeName(type)]: { model } } }
       : {};
 
     return {
@@ -91,5 +99,63 @@ export class DealService {
     });
 
     return image;
+  }
+
+  async updateDeal(id: number, payload: Partial<Deal>): Promise<UpdateResult> {
+    return this.dealRepository.update({ id }, payload);
+  }
+
+  async deleteDeal(id: number): Promise<DeleteResult> {
+    return this.dealRepository.softDelete({ id });
+  }
+
+  async getDealRaw(id: number): Promise<DealRaw> {
+    return this.dealRawRepository.findOneOrFail({
+      where: { id, classified: false },
+    });
+  }
+
+  async classifyDealRaw(id: number): Promise<void> {
+    await this.dealRawRepository.update({ id }, { classified: true });
+  }
+
+  async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
+    const dealRaw = await this.getDealRaw(id);
+    const {
+      price,
+      source,
+      url,
+      date,
+      imgUrl,
+      type,
+      itemId,
+      unused,
+      title,
+      content,
+    } = dealRaw;
+
+    const image = await fetch(`${imgUrl}?type=w300`)
+      .then((res) => res.arrayBuffer().then(Buffer.from))
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
+
+    const deal = {
+      type,
+      itemId,
+      unused,
+      ...payload,
+      price,
+      source,
+      sold: false,
+      url,
+      date,
+      image,
+      title,
+      content,
+    };
+
+    await this.dealRepository.create(deal).save();
   }
 }

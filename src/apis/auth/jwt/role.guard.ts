@@ -5,9 +5,11 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import { UserRepository } from 'src/repositories';
 import { Role } from 'src/lib/types/role.type';
 import { PermissionException } from 'src/lib/exceptions/permission.exception';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities';
 
 export type RoleInfo = {
   userId: number;
@@ -18,7 +20,10 @@ export type RoleInfo = {
 export const RoleGuard = (minimumPermission: Role): Type<CanActivate> => {
   @Injectable()
   class RoleGuardMixin implements CanActivate {
-    constructor(private readonly userRepository: UserRepository) {}
+    constructor(
+      @InjectRepository(User)
+      private readonly userRepository: Repository<User>,
+    ) {}
 
     async canActivate(ctx: ExecutionContext): Promise<boolean> {
       const request = ctx.switchToHttp().getRequest();
