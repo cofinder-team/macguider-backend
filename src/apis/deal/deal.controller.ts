@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   StreamableFile,
+  UseGuards,
 } from '@nestjs/common';
 import { DealService } from './deal.service';
 import { Readable } from 'typeorm/platform/PlatformTools';
@@ -28,7 +29,10 @@ import { firstValueFrom, map } from 'rxjs';
 import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { RoleGuard } from '../auth/jwt/role.guard';
+import { Role } from 'src/lib/types/role.type';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -91,10 +95,11 @@ export class DealController {
   }
 
   @Put('/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
-    deprecated: true,
-    summary: '거래 정보 수정 및 삭제 (admin console only)',
+    summary: '거래 정보 수정 및 삭제 (Admin Console [Manage] 전용)',
   })
+  @ApiBearerAuth()
   async manageDeal(
     @Param('id') id: number,
     @Body() body: DealManageRequestDto,
@@ -111,20 +116,23 @@ export class DealController {
   }
 
   @Get('/raw/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
-    deprecated: true,
-    summary: '수집된 raw 거래 정보 확인 (deprecated)',
+    summary: '수집된 raw 거래 정보 확인 (Admin Console [Raw] 전용)',
   })
+  @ApiBearerAuth()
   async getDealRaw(@Param('id') id: number): Promise<DealRawResponseDto> {
     const dealRaw = await this.dealService.getDealRaw(id);
     return DealRawResponseDto.of(dealRaw);
   }
 
   @Put('/raw/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
     deprecated: true,
-    summary: '수집된 raw 정보를 거래 내역에 등록 (deprecated)',
+    summary: '수집된 raw 정보를 거래 내역에 등록 (Admin Console [Raw] 전용)',
   })
+  @ApiBearerAuth()
   async convertDealFromRaw(
     @Param('id') id: number,
     @Body() body: DealRawConvertRequestDto,
