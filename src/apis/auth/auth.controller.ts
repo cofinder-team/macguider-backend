@@ -13,6 +13,7 @@ import {
   AuthLoginRequestDto,
   AuthRefreshRequestDto,
   AuthRegisterRequestDto,
+  AuthResendRequestDto,
   AuthTokenResponseDto,
   AuthUserDto,
   UserResponseDto,
@@ -101,6 +102,22 @@ export class AuthController {
 
     await this.mailService.sendCertificateMail(email, uuid);
     return UserResponseDto.of(user);
+  }
+
+  @Post('/resend')
+  @ApiOperation({ summary: '인증 이메일 재전송 및 기존 이메일 만료' })
+  async resend(@Body() body: AuthResendRequestDto): Promise<void> {
+    const { email } = body;
+
+    const user = await this.userService.getUserByEmail(email);
+    if (user && user.certified) {
+      throw new BadRequestException('이미 가입이 완료된 이메일입니다.');
+    }
+
+    const uuid = randomUuid();
+    await this.userService.updateUserUuid(user.id, uuid);
+
+    await this.mailService.sendCertificateMail(email, uuid);
   }
 
   @Post('/logout')
