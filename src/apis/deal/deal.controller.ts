@@ -159,7 +159,7 @@ export class DealController {
     const data = {
       channel: 'hotdeal-alert',
       username: 'User Report',
-      text: `[Report] #${id}\n${report}\nhttps://dev.macguider.io/deals/report/${id}`,
+      text: `[Report] #${id}\n${report}\nhttps://www.macguider.io/deals/report/${id}`,
     };
 
     return firstValueFrom(
