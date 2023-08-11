@@ -129,7 +129,6 @@ export class DealController {
   @Put('/raw/:id')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
-    deprecated: true,
     summary: '수집된 raw 정보를 거래 내역에 등록 (Admin Console [Raw] 전용)',
   })
   @ApiBearerAuth()

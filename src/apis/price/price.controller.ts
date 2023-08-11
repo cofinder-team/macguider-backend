@@ -19,7 +19,7 @@ export class PriceController {
   ) {}
 
   @Get('/regular/:type/:id')
-  @ApiOperation({ summary: '최근 1년간 정가 정보 조회' })
+  @ApiOperation({ summary: '최근 1년간 정품 가격 정보 조회' })
   async getRegularPrices(
     @Param() item: ItemDto,
   ): Promise<PriceRegularResponseDto[]> {
@@ -43,7 +43,7 @@ export class PriceController {
   }
 
   @Get('/coupang/:type/:id')
-  @ApiOperation({ summary: '최근 1년간 정품 가격 조회' })
+  @ApiOperation({ summary: '최근 1년간 쿠팡 가격 조회' })
   async getCoupangPrices(
     @Param() item: ItemDto,
   ): Promise<PriceCoupangResponseDto[]> {
