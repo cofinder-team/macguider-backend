@@ -31,6 +31,10 @@ export class UserService {
     await this.userRepository.update(id, { refreshToken });
   }
 
+  async updateUserUuid(id: number, uuid: string): Promise<void> {
+    await this.userRepository.update(id, { uuid });
+  }
+
   async certifyUser(id: number): Promise<void> {
     await this.userRepository.update(id, { certified: true });
   }
