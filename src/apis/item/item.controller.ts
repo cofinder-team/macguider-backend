@@ -1,6 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ItemService } from './item.service';
-import { ItemDto, ItemResponseDto } from 'src/dtos';
+import { ItemDto, ItemRequestDto, ItemResponseDto } from 'src/dtos';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('item')
@@ -9,12 +9,12 @@ export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
-  @ApiOperation({
-    deprecated: true,
-    summary: '전체 품목 및 옵션 목록 조회 (admin console only)',
-  })
-  async getItems(): Promise<ItemResponseDto[]> {
-    const items = await this.itemService.getItems();
+  @ApiOperation({ summary: '전체 품목 및 옵션 목록 조회' })
+  async getItems(@Query() payload: ItemRequestDto): Promise<ItemResponseDto[]> {
+    const { type, model, ...details } = payload;
+
+    const options = this.itemService.getOptions(type, model, details);
+    const items = await this.itemService.getItems(options);
     return items.map(ItemResponseDto.of);
   }
 
