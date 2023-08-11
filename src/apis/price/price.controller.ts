@@ -91,20 +91,4 @@ export class PriceController {
     const price = await this.priceService.getRecentTradePrice(options);
     return PriceTradeResponseDto.of(price);
   }
-
-  @Get('/deal/:type/:id')
-  @ApiOperation({
-    summary: '임시 거래 가격 조회 (deprecated)',
-    deprecated: true,
-  })
-  async getPrice(
-    @Param() item: ItemDto,
-    @Query() query: PriceTradeRequestDto,
-  ): Promise<PriceTradeResponseDto> {
-    const options = { ...item, ...query };
-    await this.itemService.existsItem(item);
-
-    const price = await this.priceService.getRecentTradePrice(options);
-    return PriceTradeResponseDto.of(price);
-  }
 }
