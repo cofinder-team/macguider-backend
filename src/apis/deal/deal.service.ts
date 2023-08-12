@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Deal, DealFiltered, DealRaw } from 'src/entities';
 import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
+import { ItemType, getItemType } from 'src/lib/enums/item.type.enum';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
-import { getTypeName } from 'src/lib/utils/type.util';
 import {
   DeleteResult,
   FindOptionsOrder,
@@ -27,13 +27,13 @@ export class DealService {
   ) {}
 
   getOptions(
-    type: string,
+    type: ItemType,
     model: number,
     itemId: number,
     source: string,
   ): FindOptionsWhere<DealFiltered> {
     const options = type
-      ? { type, itemId, item: { [getTypeName(type)]: { model } } }
+      ? { type, itemId, item: { [getItemType(type)]: { model } } }
       : {};
 
     return {

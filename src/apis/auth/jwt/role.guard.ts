@@ -5,7 +5,7 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import { Role } from 'src/lib/types/role.type';
+import { Role } from 'src/lib/enums/user.role.enum';
 import { PermissionException } from 'src/lib/exceptions/permission.exception';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';

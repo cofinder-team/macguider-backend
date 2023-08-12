@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ItemDto, ItemOptionsDto } from 'src/dtos';
 import { Item } from 'src/entities';
 import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
-import { getTypeName } from 'src/lib/utils/type.util';
+import { ItemType, getItemType } from 'src/lib/enums/item.type.enum';
 import {
   DataSource,
   FindOptionsOrder,
@@ -32,12 +32,12 @@ export class ItemService {
   }
 
   getOptions(
-    type: string,
+    type: ItemType,
     model: number,
     details: ItemOptionsDto,
   ): FindOptionsWhere<Item> {
     const options = {
-      ...(type ? { type, [getTypeName(type)]: { model, ...details } } : {}),
+      ...(type ? { type, [getItemType(type)]: { model, ...details } } : {}),
     };
 
     return options;
