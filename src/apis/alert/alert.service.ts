@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlertTarget } from 'src/entities';
+import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
 import {
   FindOptionsOrder,
   FindOptionsRelations,
@@ -23,7 +24,7 @@ export class AlertService {
       unused: 'ASC',
     };
     const relations: FindOptionsRelations<AlertTarget> = {
-      item: { macbook: { modelEntity: {} }, ipad: { modelEntity: {} } },
+      item: getItemDetailRelation({ modelEntity: {} }),
     };
 
     return this.alertTargetRepository.find({ where, order, relations });

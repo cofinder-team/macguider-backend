@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Deal, DealFiltered, DealRaw } from 'src/entities';
+import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
 import { getTypeName } from 'src/lib/utils/type.util';
@@ -72,10 +73,7 @@ export class DealService {
     };
 
     const relations: FindOptionsRelations<DealFiltered> = {
-      item: {
-        macbook: { modelEntity: {} },
-        ipad: { modelEntity: {} },
-      },
+      item: getItemDetailRelation({ modelEntity: {} }),
     };
 
     return this.getDeals(where, order, page, relations);
@@ -84,12 +82,7 @@ export class DealService {
   async getDeal(id: number): Promise<Deal> {
     return this.dealRepository.findOneOrFail({
       where: { id },
-      relations: {
-        item: {
-          macbook: { modelEntity: {} },
-          ipad: { modelEntity: {} },
-        },
-      },
+      relations: { item: getItemDetailRelation({ modelEntity: {} }) },
     });
   }
 
