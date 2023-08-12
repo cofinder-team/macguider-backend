@@ -44,7 +44,18 @@ export class IpadOptionsDto {
   cellular?: boolean;
 }
 
+export class IphoneOptionsDto {
+  @IsIn(['DEFAULT', 'MINI', 'PLUS', 'PRO', 'PROMAX'])
+  @IsOptional()
+  modelSuffix?: string;
+
+  @IsIn(['64GB', '128GB', '256GB', '512GB', '1TB'])
+  @IsOptional()
+  storage?: string;
+}
+
 export class ItemOptionsDto extends IntersectionType(
   MacbookOptionsDto,
   IpadOptionsDto,
+  IphoneOptionsDto,
 ) {}
