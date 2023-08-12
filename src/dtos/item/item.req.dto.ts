@@ -1,12 +1,13 @@
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 import { Type } from 'class-transformer';
 import { ItemOptionsDto } from '../common';
+import { ItemType } from 'src/lib/enums/item.type.enum';
 
 export class ItemRequestDto extends ItemOptionsDto {
-  @IsIn(['M', 'P'])
+  @IsEnum(ItemType)
   @IsOptional()
-  type?: string;
+  type?: ItemType;
 
   @IsNumber()
   @IsOptional()

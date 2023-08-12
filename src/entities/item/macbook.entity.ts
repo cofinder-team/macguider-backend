@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { ItemDetailEntity } from './item-detall.entity';
-import { Item } from './item.entity';
-import { Model } from './model.entity';
+import { ItemDetailEntity } from './detall.entity';
+import { Item } from '../item.entity';
+import { Model } from '../model.entity';
 
 @Entity({ schema: 'macguider', name: 'item_macbook' })
 export class ItemMacbook extends ItemDetailEntity {

@@ -1,5 +1,5 @@
 import { Column, ViewEntity } from 'typeorm';
-import { Deal } from './deal.entity';
+import { Deal } from '../deal.entity';
 
 @ViewEntity({ schema: 'macguider', name: 'deal_filtered' })
 export class DealFiltered extends Deal {
