@@ -32,7 +32,7 @@ import { PriceService } from '../price/price.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { RoleGuard } from '../auth/jwt/role.guard';
-import { Role } from 'src/lib/types/role.type';
+import { Role } from 'src/lib/enums/user.role.enum';
 
 @Controller('deal')
 @ApiTags('deal')
