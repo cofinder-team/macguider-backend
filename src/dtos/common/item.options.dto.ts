@@ -51,7 +51,7 @@ export class IphoneOptionsDto {
 
   @IsIn(['64GB', '128GB', '256GB', '512GB', '1TB'])
   @IsOptional()
-  storage?: string;
+  phoneStorage?: string;
 }
 
 export class ItemOptionsDto extends IntersectionType(
