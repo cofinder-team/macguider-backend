@@ -3,7 +3,19 @@ import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsIn, IsNumber, IsOptional } from 'class-validator';
 
 export class MacbookOptionsDto {
-  @IsIn(['M1', 'M1PRO', 'M1MAX', 'M2', 'M2PRO', 'M2MAX'])
+  @IsIn([
+    'A12',
+    'A12Z',
+    'A13',
+    'A14',
+    'A15',
+    'M1',
+    'M1PRO',
+    'M1MAX',
+    'M2',
+    'M2PRO',
+    'M2MAX',
+  ])
   @IsOptional()
   chip?: string;
 
@@ -42,6 +54,22 @@ export class IpadOptionsDto {
   @IsOptional()
   @Transform(({ value }) => value === 'true')
   cellular?: boolean;
+
+  @IsIn([
+    'A12',
+    'A12Z',
+    'A13',
+    'A14',
+    'A15',
+    'M1',
+    'M1PRO',
+    'M1MAX',
+    'M2',
+    'M2PRO',
+    'M2MAX',
+  ])
+  @IsOptional()
+  chip?: string;
 }
 
 export class IphoneOptionsDto {
