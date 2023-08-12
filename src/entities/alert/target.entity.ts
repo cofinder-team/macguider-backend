@@ -6,8 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Item } from './item.entity';
+import { User } from '../user.entity';
+import { Item } from '../item.entity';
 
 @Entity({ schema: 'macguider', name: 'alert_target' })
 export class AlertTarget extends BaseEntity {

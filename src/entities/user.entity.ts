@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AlertTarget } from './alert-target.entity';
+import { AlertTarget } from './alert/target.entity';
 
 @Entity({ schema: 'macguider', name: 'user' })
 export class User extends BaseEntity {

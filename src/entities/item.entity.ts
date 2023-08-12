@@ -9,9 +9,9 @@ import {
 } from 'typeorm';
 import { Deal } from './deal.entity';
 import { Type } from './type.entity';
-import { ItemMacbook } from './item-macbook.entity';
-import { ItemIpad } from './item-ipad.entity';
-import { AlertTarget } from './alert-target.entity';
+import { ItemMacbook } from './item/macbook.entity';
+import { ItemIpad } from './item/ipad.entity';
+import { AlertTarget } from './alert/target.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
