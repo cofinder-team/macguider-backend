@@ -7,8 +7,8 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Type } from './type.entity';
-import { ItemMacbook } from './item-macbook.entity';
-import { ItemIpad } from './item-ipad.entity';
+import { ItemMacbook } from './item/macbook.entity';
+import { ItemIpad } from './item/ipad.entity';
 
 @Entity({ schema: 'macguider', name: 'model' })
 export class Model {
