@@ -4,6 +4,8 @@ const getTypeName = (type: string): string => {
       return 'macbook';
     case 'P':
       return 'ipad';
+    case 'I':
+      return 'iphone';
   }
 };
 

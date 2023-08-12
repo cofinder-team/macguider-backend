@@ -11,6 +11,7 @@ import { User } from './user.entity';
 import { PriceRegular } from './price/regular.entity';
 import { PriceCoupang } from './price/coupang.entity';
 import { AlertTarget } from './alert/target.entity';
+import { ItemIphone } from './item/iphone.entity';
 
 export {
   AlertTarget,
@@ -20,6 +21,7 @@ export {
   Item,
   ItemMacbook,
   ItemIpad,
+  ItemIphone,
   ItemDetailEntity,
   Model,
   PriceRegular,
