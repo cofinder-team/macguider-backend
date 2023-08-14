@@ -121,10 +121,18 @@ export class DealController {
     const { url } = body;
     const deal = await this.dealService.getDealRawByUrl(url);
 
-    if (!deal) {
-      const payload = { url, source: '당근마켓' };
-      await this.dealService.createDealRaw(payload);
-    }
+    const result = await (async () => {
+      if (deal) {
+        const { id, url } = deal;
+        return { id, url, success: false };
+      } else {
+        const payload = { url, source: '당근마켓' };
+        const { id } = await this.dealService.createDealRaw(payload);
+        return { id, url, success: true };
+      }
+    })();
+
+    await this.slackService.sendSlackDealRaw(result);
   }
 
   @Get('/raw/:id')
