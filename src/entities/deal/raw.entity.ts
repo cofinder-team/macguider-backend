@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ schema: 'macguider', name: 'raw_used_item' })
-export class DealRaw {
+export class DealRaw extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
