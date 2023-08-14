@@ -32,4 +32,19 @@ export class SlackService {
 
     return this.sendSlackMessage(data);
   }
+
+  async sendSlackDealRaw(result: {
+    id: number;
+    url: string;
+    success: boolean;
+  }): Promise<AxiosResponse> {
+    const { id, url, success } = result;
+    const data = {
+      channel: 'logs',
+      username: 'Raw Deal',
+      text: `${success ? 'New Raw Deal: ' : 'Duplicated: '} #${id}\n${url}`,
+    };
+
+    return this.sendSlackMessage(data);
+  }
 }
