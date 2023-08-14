@@ -20,12 +20,10 @@ import {
   DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
+  DealRawCreateRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
-import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
-import { firstValueFrom, map } from 'rxjs';
 import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
@@ -33,6 +31,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { RoleGuard } from '../auth/jwt/role.guard';
 import { Role } from 'src/lib/enums/user.role.enum';
+import { SlackService } from './slack/slack.service';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -40,8 +39,7 @@ export class DealController {
   constructor(
     private readonly dealService: DealService,
     private readonly priceService: PriceService,
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
+    private readonly slackService: SlackService,
   ) {}
 
   @Get()
@@ -115,6 +113,28 @@ export class DealController {
     if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
+  @Post('/raw')
+  @ApiOperation({
+    summary: '수집된 raw 거래 정보 등록 (Mobile Crawler 전용)',
+  })
+  async createDealRaw(@Body() body: DealRawCreateRequestDto): Promise<void> {
+    const { url } = body;
+    const deal = await this.dealService.getDealRawByUrl(url);
+
+    const result = await (async () => {
+      if (deal) {
+        const { id, url } = deal;
+        return { id, url, success: false };
+      } else {
+        const payload = { url, source: '당근마켓' };
+        const { id } = await this.dealService.createDealRaw(payload);
+        return { id, url, success: true };
+      }
+    })();
+
+    await this.slackService.sendSlackDealRaw(result);
+  }
+
   @Get('/raw/:id')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
@@ -152,17 +172,8 @@ export class DealController {
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
   ): Promise<AxiosResponse> {
-    const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
     const { report } = body;
 
-    const data = {
-      channel: 'hotdeal-alert',
-      username: 'User Report',
-      text: `[Report] #${id}\n${report}\nhttps://www.macguider.io/deals/report/${id}`,
-    };
-
-    return firstValueFrom(
-      this.httpService.post(url, data).pipe(map((x) => x.data)),
-    );
+    return this.slackService.sendSlackReport(id, report);
   }
 }

@@ -108,6 +108,16 @@ export class DealService {
     });
   }
 
+  async getDealRawByUrl(url: string): Promise<DealRaw> {
+    return this.dealRawRepository.findOne({
+      where: { url },
+    });
+  }
+
+  async createDealRaw(payload: Partial<DealRaw>): Promise<DealRaw> {
+    return this.dealRawRepository.create(payload).save();
+  }
+
   async classifyDealRaw(id: number): Promise<void> {
     await this.dealRawRepository.update({ id }, { classified: true });
   }
