@@ -114,9 +114,11 @@ export class DealController {
   }
 
   @Post('/raw')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
     summary: '수집된 raw 거래 정보 등록 (Mobile Crawler 전용)',
   })
+  @ApiBearerAuth()
   async createDealRaw(@Body() body: DealRawCreateRequestDto): Promise<void> {
     const { url } = body;
     const deal = await this.dealService.getDealRawByUrl(url);
