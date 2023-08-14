@@ -20,6 +20,7 @@ import {
   DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
+  DealRawCreateRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
@@ -110,6 +111,20 @@ export class DealController {
       : this.dealService.updateDeal(id, payload));
 
     if (!affected) throw new EntityNotFoundError(Deal, id);
+  }
+
+  @Post('/raw')
+  @ApiOperation({
+    summary: '수집된 raw 거래 정보 등록 (Mobile Crawler 전용)',
+  })
+  async createDealRaw(@Body() body: DealRawCreateRequestDto): Promise<void> {
+    const { url } = body;
+    const deal = await this.dealService.getDealRawByUrl(url);
+
+    if (!deal) {
+      const payload = { url, source: '당근마켓' };
+      await this.dealService.createDealRaw(payload);
+    }
   }
 
   @Get('/raw/:id')
