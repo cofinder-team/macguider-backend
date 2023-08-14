@@ -22,10 +22,7 @@ import {
   DealResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
-import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
-import { firstValueFrom, map } from 'rxjs';
 import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
@@ -33,6 +30,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { RoleGuard } from '../auth/jwt/role.guard';
 import { Role } from 'src/lib/enums/user.role.enum';
+import { SlackService } from './slack/slack.service';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -40,8 +38,7 @@ export class DealController {
   constructor(
     private readonly dealService: DealService,
     private readonly priceService: PriceService,
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
+    private readonly slackService: SlackService,
   ) {}
 
   @Get()
@@ -152,17 +149,8 @@ export class DealController {
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
   ): Promise<AxiosResponse> {
-    const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
     const { report } = body;
 
-    const data = {
-      channel: 'hotdeal-alert',
-      username: 'User Report',
-      text: `[Report] #${id}\n${report}\nhttps://www.macguider.io/deals/report/${id}`,
-    };
-
-    return firstValueFrom(
-      this.httpService.post(url, data).pipe(map((x) => x.data)),
-    );
+    return this.slackService.sendSlackReport(id, report);
   }
 }
