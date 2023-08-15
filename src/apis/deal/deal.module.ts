@@ -3,10 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DealController } from './deal.controller';
 import { DealService } from './deal.service';
 import { Deal, DealFiltered, DealRaw, User } from 'src/entities';
-import { ConfigModule } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
 import { PriceService } from '../price/price.service';
 import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
+import { SlackModule } from './slack/slack.module';
 
 @Module({
   imports: [
@@ -19,13 +18,7 @@ import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
       DealRaw,
       User,
     ]),
-    ConfigModule,
-    HttpModule.registerAsync({
-      useFactory: () => ({
-        timeout: 5000,
-        maxRedirects: 5,
-      }),
-    }),
+    SlackModule,
   ],
   controllers: [DealController],
   providers: [DealService, PriceService],

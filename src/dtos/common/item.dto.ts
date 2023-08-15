@@ -1,9 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsIn, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+import { ItemType } from 'src/lib/enums/item.type.enum';
 
 export class ItemDto {
-  @IsIn(['M', 'P'])
-  type: string;
+  @IsEnum(ItemType)
+  type: ItemType;
 
   @IsNumber()
   @Type(() => Number)

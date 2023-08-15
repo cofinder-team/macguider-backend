@@ -1,4 +1,4 @@
-import { Role } from 'src/lib/types/role.type';
+import { Role } from 'src/lib/enums/user.role.enum';
 
 export class AuthUserDto {
   id: number;
