@@ -1,11 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../common/pagination.dto';
+import { ItemType } from 'src/lib/enums/item.type.enum';
+import { Source } from 'src/lib/enums/source.enum';
 
 export class DealRequestDto extends PaginationDto {
-  @IsIn(['M', 'P'])
+  @IsEnum(ItemType)
   @IsOptional()
-  type?: string;
+  type?: ItemType;
 
   @IsNumber()
   @Type(() => Number)
@@ -17,9 +19,9 @@ export class DealRequestDto extends PaginationDto {
   @IsOptional()
   itemId?: number;
 
-  @IsIn(['중고나라', '번개장터'])
+  @IsEnum(Source)
   @IsOptional()
-  source?: string;
+  source?: Source;
 
   @IsString()
   @IsOptional()
