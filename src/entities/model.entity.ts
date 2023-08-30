@@ -28,27 +28,19 @@ export class Model {
   name: string;
 
   @OneToMany(() => ItemMacbook, (macbookItem) => macbookItem.modelEntity)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'model' },
-  ])
   macbookItems: ItemMacbook[];
 
   @OneToMany(() => ItemIpad, (ipadItem) => ipadItem.modelEntity)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'model' },
-  ])
   ipadItems: ItemIpad[];
 
   @OneToMany(() => ItemIphone, (iphoneItem) => iphoneItem.modelEntity)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'model' },
-  ])
   iphoneItems: ItemIphone[];
 
   @ManyToOne(() => Type, (type) => type.models)
-  @JoinColumn({ name: 'type', referencedColumnName: 'type' })
+  @JoinColumn({
+    foreignKeyConstraintName: 'model_type_type_fk',
+    name: 'type',
+    referencedColumnName: 'type',
+  })
   typeEntity: Type;
 }

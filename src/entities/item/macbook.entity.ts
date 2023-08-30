@@ -36,15 +36,31 @@ export class ItemMacbook extends ItemDetailEntity {
 
   @ManyToOne(() => Model, (model) => model.macbookItems)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'model', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'item_macbook_model_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'item_macbook_model_type_id_fk',
+      name: 'model',
+      referencedColumnName: 'id',
+    },
   ])
   modelEntity: Model;
 
   @OneToOne(() => Item, (item) => item.macbook)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'item_macbook_item_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'item_macbook_item_type_id_fk',
+      name: 'id',
+      referencedColumnName: 'id',
+    },
   ])
   item: Item;
 }

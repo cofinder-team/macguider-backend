@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -35,6 +34,5 @@ export class User extends BaseEntity {
   certified: boolean;
 
   @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.user)
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   alertTargets: AlertTarget[];
 }
