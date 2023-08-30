@@ -1,8 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../common/pagination.dto';
-import { ItemType } from 'src/lib/enums/item.type.enum';
-import { Source } from 'src/lib/enums/source.enum';
+import { ItemType, Source } from 'src/lib/enums';
 
 export class DealRequestDto extends PaginationDto {
   @IsEnum(ItemType)

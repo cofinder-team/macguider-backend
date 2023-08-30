@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ItemDto, ItemOptionsDto } from 'src/dtos';
 import { Item } from 'src/entities';
 import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
-import { ItemType, getItemType } from 'src/lib/enums/item.type.enum';
+import { ItemType, getItemType } from 'src/lib/enums';
 import {
   DataSource,
   FindOptionsOrder,

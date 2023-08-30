@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber } from 'class-validator';
-import { ItemType } from 'src/lib/enums/item.type.enum';
+import { ItemType } from 'src/lib/enums';
 
 export class ItemDto {
   @IsEnum(ItemType)
