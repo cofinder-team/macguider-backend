@@ -5,12 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../user.entity';
 import { Item } from '../item.entity';
 import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'alert_target' })
+@Unique('alert_target_uk', ['unused', 'type', 'userId', 'itemId'])
 export class AlertTarget extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
