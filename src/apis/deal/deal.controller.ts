@@ -129,7 +129,7 @@ export class DealController {
         const { id, url } = deal;
         return { id, url, success: false };
       } else {
-        const payload = { url, source: '당근마켓' };
+        const payload = { url, source: Source.당근마켓 };
         const { id } = await this.dealService.createDealRaw(payload);
         return { id, url, success: true };
       }
