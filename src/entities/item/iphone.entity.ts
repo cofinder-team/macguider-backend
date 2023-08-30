@@ -1,10 +1,19 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  Unique,
+} from 'typeorm';
 import { ItemDetailEntity } from './detall.entity';
 import { Model } from '../model.entity';
 import { Item } from '../item.entity';
 import { Storage, IphoneSuffix } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_iphone' })
+@Unique('item_iphone_option_uk', ['model', 'option'])
+@Unique('item_iphone_detail_uk', ['model', 'modelSuffix', 'storage'])
 export class ItemIphone extends ItemDetailEntity {
   @Column({ type: 'enum', enum: IphoneSuffix })
   modelSuffix: IphoneSuffix;

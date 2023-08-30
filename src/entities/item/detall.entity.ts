@@ -1,8 +1,9 @@
-import { BaseEntity, Column, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, PrimaryColumn, Unique } from 'typeorm';
 import { Model } from '../model.entity';
 import { Item } from '../item.entity';
 import { ItemType } from 'src/lib/enums';
 
+@Unique(['model', 'option'])
 export class ItemDetailEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 1 })
   type: ItemType;
