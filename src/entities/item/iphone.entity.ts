@@ -2,14 +2,15 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ItemDetailEntity } from './detall.entity';
 import { Model } from '../model.entity';
 import { Item } from '../item.entity';
+import { Storage, IphoneSuffix } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_iphone' })
 export class ItemIphone extends ItemDetailEntity {
-  @Column()
-  modelSuffix: string;
+  @Column({ type: 'enum', enum: IphoneSuffix })
+  modelSuffix: IphoneSuffix;
 
-  @Column()
-  storage: string;
+  @Column({ type: 'enum', enum: Storage })
+  storage: Storage;
 
   @ManyToOne(() => Model, (model) => model.iphoneItems)
   @JoinColumn([

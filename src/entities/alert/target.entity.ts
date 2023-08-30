@@ -8,14 +8,15 @@ import {
 } from 'typeorm';
 import { User } from '../user.entity';
 import { Item } from '../item.entity';
+import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'alert_target' })
 export class AlertTarget extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
-  @Column()
-  type: string;
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
 
   @Column()
   itemId: number;

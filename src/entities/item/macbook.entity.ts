@@ -2,11 +2,12 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ItemDetailEntity } from './detall.entity';
 import { Item } from '../item.entity';
 import { Model } from '../model.entity';
+import { Chip, Ssd } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_macbook' })
 export class ItemMacbook extends ItemDetailEntity {
-  @Column()
-  chip: string;
+  @Column({ type: 'enum', enum: Chip })
+  chip: Chip;
 
   @Column()
   cpu: number;
@@ -17,8 +18,8 @@ export class ItemMacbook extends ItemDetailEntity {
   @Column()
   ram: number;
 
-  @Column()
-  ssd: string;
+  @Column({ type: 'enum', enum: Ssd })
+  ssd: Ssd;
 
   @ManyToOne(() => Model, (model) => model.macbookItems)
   @JoinColumn([

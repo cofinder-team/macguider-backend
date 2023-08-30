@@ -1,4 +1,3 @@
-import { Role } from 'src/lib/enums/user.role.enum';
 import {
   BaseEntity,
   Column,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AlertTarget } from './alert/target.entity';
+import { Role } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'user' })
 export class User extends BaseEntity {
@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column()
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({ type: 'uuid' })
