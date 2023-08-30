@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Deal, DealFiltered, DealRaw } from 'src/entities';
 import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
-import { ItemType, getItemType } from 'src/lib/enums/item.type.enum';
+import { ItemType, getItemType } from 'src/lib/enums';
 import { FindOptionsPage } from 'src/lib/types/page.type';
 import { addDays } from 'src/lib/utils/date.util';
 import {
