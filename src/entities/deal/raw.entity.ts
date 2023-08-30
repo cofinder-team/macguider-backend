@@ -36,9 +36,15 @@ export class DealRaw extends BaseEntity {
   @Column({ nullable: true })
   unused: boolean;
 
+  @Column({ type: 'bytea', nullable: true })
+  image: Buffer;
+
   @Column({ nullable: true })
   imgUrl: string;
 
   @Column({ default: false })
   classified: boolean;
+
+  @Column({ type: 'jsonb', nullable: true })
+  rawJson: JSON;
 }
