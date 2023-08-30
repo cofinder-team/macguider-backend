@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Item } from './item.entity';
-import { ItemType } from 'src/lib/enums';
+import { ItemCondition, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
@@ -42,6 +42,12 @@ export class Deal extends BaseEntity {
   @Column({ type: 'bytea', nullable: true })
   image: Buffer;
 
+  @Column({ type: 'timestamptz', default: () => 'now()' })
+  lastCrawled: Date;
+
+  @Column({ nullable: true })
+  writer: string;
+
   @Column({ nullable: true })
   title: string;
 
@@ -51,8 +57,14 @@ export class Deal extends BaseEntity {
   @Column({ nullable: true })
   appleCare: boolean;
 
+  @Column({ type: 'enum', enum: ItemCondition, nullable: true })
+  condition: ItemCondition;
+
   @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  alertedAt: Date;
 
   @ManyToOne(() => Item, (item) => item.deals)
   @JoinColumn([
