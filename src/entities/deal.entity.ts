@@ -12,7 +12,7 @@ import { ItemCondition, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'deal_pk' })
   id: number;
 
   @Column({ type: 'varchar', length: 1 })

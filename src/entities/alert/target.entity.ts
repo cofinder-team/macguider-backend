@@ -14,7 +14,10 @@ import { ItemType } from 'src/lib/enums';
 @Entity({ schema: 'macguider', name: 'alert_target' })
 @Unique('alert_target_uk', ['unused', 'type', 'userId', 'itemId'])
 export class AlertTarget extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'integer' })
+  @PrimaryGeneratedColumn({
+    primaryKeyConstraintName: 'alert_target_pk',
+    type: 'integer',
+  })
   id: number;
 
   @Column({ type: 'varchar', length: 1 })

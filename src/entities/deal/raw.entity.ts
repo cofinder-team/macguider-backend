@@ -3,7 +3,10 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ schema: 'macguider', name: 'raw_used_item' })
 export class DealRaw extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'integer' })
+  @PrimaryGeneratedColumn({
+    primaryKeyConstraintName: 'raw_used_item_pk',
+    type: 'integer',
+  })
   id: number;
 
   @Column({ nullable: true })

@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
+  PrimaryColumn,
   Unique,
 } from 'typeorm';
 import { ItemDetailEntity } from './detall.entity';
@@ -15,6 +16,9 @@ import { Storage, Chip } from 'src/lib/enums';
 @Unique('item_ipad_option_uk', ['model', 'option'])
 @Unique('item_ipad_detail_uk', ['model', 'storage', 'gen', 'cellular'])
 export class ItemIpad extends ItemDetailEntity {
+  @PrimaryColumn({ primaryKeyConstraintName: 'item_ipad_pk' })
+  id: number;
+
   @Column({ type: 'enum', enum: Storage })
   storage: Storage;
 

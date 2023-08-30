@@ -13,7 +13,7 @@ import { Role } from 'src/lib/enums';
 @Entity({ schema: 'macguider', name: 'user' })
 @Unique('user_email_uk', ['email'])
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'user_pk' })
   id: number;
 
   @Column()
