@@ -1,43 +1,44 @@
+import { ItemType, Source } from 'src/lib/enums';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ schema: 'macguider', name: 'raw_used_item' })
 export class DealRaw extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   writer: string;
 
-  @Column()
+  @Column({ nullable: true })
   content: string;
 
-  @Column()
+  @Column({ nullable: true })
   price: number;
 
-  @Column()
-  source: string;
+  @Column({ nullable: true })
+  source: Source;
 
-  @Column()
+  @Column({ type: 'timestamptz', default: () => 'now()', nullable: true })
   date: Date;
 
-  @Column()
+  @Column({ nullable: true })
   url: string;
 
-  @Column()
-  type: string;
+  @Column({ type: 'varchar', length: 1, nullable: true })
+  type: ItemType;
 
-  @Column()
+  @Column({ nullable: true })
   itemId: number;
 
-  @Column()
+  @Column({ nullable: true })
   unused: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   imgUrl: string;
 
-  @Column()
+  @Column({ default: false })
   classified: boolean;
 }

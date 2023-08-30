@@ -8,14 +8,15 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Item } from './item.entity';
+import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  type: string;
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
 
   @Column()
   itemId: number;
@@ -24,12 +25,12 @@ export class Deal extends BaseEntity {
   date: Date;
 
   @Column()
-  price?: number;
+  price: number;
 
-  @Column()
+  @Column({ default: false })
   sold: boolean;
 
-  @Column()
+  @Column({ default: false })
   unused: boolean;
 
   @Column()
@@ -38,19 +39,19 @@ export class Deal extends BaseEntity {
   @Column()
   url: string;
 
-  @Column({ type: 'bytea' })
+  @Column({ type: 'bytea', nullable: true })
   image: Buffer;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
   @Column()
   content: string;
 
-  @Column()
+  @Column({ nullable: true })
   appleCare: boolean;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt: Date;
 
   @ManyToOne(() => Item, (item) => item.deals)

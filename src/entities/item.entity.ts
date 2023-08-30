@@ -13,11 +13,12 @@ import { ItemMacbook } from './item/macbook.entity';
 import { ItemIpad } from './item/ipad.entity';
 import { AlertTarget } from './alert/target.entity';
 import { ItemIphone } from './item/iphone.entity';
+import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
-  @PrimaryColumn()
-  type: string;
+  @PrimaryColumn({ type: 'varchar', length: 1 })
+  type: ItemType;
 
   @PrimaryColumn()
   id: number;

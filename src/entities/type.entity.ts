@@ -8,14 +8,15 @@ import {
 } from 'typeorm';
 import { Model } from './model.entity';
 import { Item } from './item.entity';
+import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'type' })
 export class Type extends BaseEntity {
-  @PrimaryColumn()
-  type: string;
+  @PrimaryColumn({ type: 'varchar', length: 1 })
+  type: ItemType;
 
   @Column()
-  tbl_name: string;
+  tblName: string;
 
   @OneToMany(() => Model, (model) => model.typeEntity)
   @JoinColumn({ name: 'type', referencedColumnName: 'type' })
