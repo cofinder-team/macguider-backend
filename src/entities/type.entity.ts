@@ -12,7 +12,11 @@ import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'type' })
 export class Type extends BaseEntity {
-  @PrimaryColumn({ type: 'varchar', length: 1 })
+  @PrimaryColumn({
+    primaryKeyConstraintName: 'type_pk',
+    type: 'varchar',
+    length: 1,
+  })
   type: ItemType;
 
   @Column()

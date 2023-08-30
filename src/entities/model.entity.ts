@@ -14,10 +14,14 @@ import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'model' })
 export class Model {
-  @PrimaryColumn({ type: 'varchar', length: 1 })
+  @PrimaryColumn({
+    primaryKeyConstraintName: 'model_pk',
+    type: 'varchar',
+    length: 1,
+  })
   type: ItemType;
 
-  @PrimaryColumn()
+  @PrimaryColumn({ primaryKeyConstraintName: 'model_pk' })
   id: number;
 
   @Column()
