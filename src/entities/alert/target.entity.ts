@@ -37,12 +37,24 @@ export class AlertTarget extends BaseEntity {
 
   @ManyToOne(() => Item, (item) => item.alertTargets)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'item_id', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'alert_target_item_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'alert_target_item_type_id_fk',
+      name: 'item_id',
+      referencedColumnName: 'id',
+    },
   ])
   item: Item;
 
   @ManyToOne(() => User, (user) => user.alertTargets)
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  @JoinColumn({
+    foreignKeyConstraintName: 'alert_target_user_id_fk',
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
   user: User;
 }

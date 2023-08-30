@@ -28,41 +28,25 @@ export class Item extends BaseEntity {
   id: number;
 
   @ManyToOne(() => Type, (type) => type.items)
-  @JoinColumn({ name: 'type', referencedColumnName: 'type' })
+  @JoinColumn({
+    foreignKeyConstraintName: 'item_type_type_fk',
+    name: 'type',
+    referencedColumnName: 'type',
+  })
   typeEntity: Type;
 
   @OneToOne(() => ItemMacbook, (itemMacbook) => itemMacbook.item)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'id' },
-  ])
   macbook: ItemMacbook;
 
-  @OneToOne(() => ItemIpad, (ItemIpad) => ItemIpad.item)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'id' },
-  ])
+  @OneToOne(() => ItemIpad, (itemIpad) => itemIpad.item)
   ipad: ItemIpad;
 
-  @OneToOne(() => ItemIphone, (ItemIphone) => ItemIphone.item)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'id' },
-  ])
+  @OneToOne(() => ItemIphone, (itemIphone) => itemIphone.item)
   iphone: ItemIphone;
 
   @OneToMany(() => Deal, (deal) => deal.item)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'item_id' },
-  ])
   deals: Deal[];
 
   @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.item)
-  @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'item_id' },
-  ])
   alertTargets: AlertTarget[];
 }

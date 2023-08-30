@@ -68,8 +68,16 @@ export class Deal extends BaseEntity {
 
   @ManyToOne(() => Item, (item) => item.deals)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'item_id', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'deal_item_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'deal_item_type_id_fk',
+      name: 'item_id',
+      referencedColumnName: 'id',
+    },
   ])
   item: Item;
 }

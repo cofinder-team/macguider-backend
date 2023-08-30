@@ -1,11 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Model } from './model.entity';
 import { Item } from './item.entity';
 import { ItemType } from 'src/lib/enums';
@@ -23,10 +16,8 @@ export class Type extends BaseEntity {
   tblName: string;
 
   @OneToMany(() => Model, (model) => model.typeEntity)
-  @JoinColumn({ name: 'type', referencedColumnName: 'type' })
   models: Model[];
 
   @OneToMany(() => Item, (item) => item.typeEntity)
-  @JoinColumn({ name: 'type', referencedColumnName: 'type' })
   items: Item[];
 }
