@@ -10,14 +10,23 @@ import {
 import { ItemDetailEntity } from './detall.entity';
 import { Model } from '../model.entity';
 import { Item } from '../item.entity';
-import { Storage, IphoneSuffix } from 'src/lib/enums';
+import { Storage, IphoneSuffix, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_iphone' })
 @Unique('item_iphone_option_uk', ['model', 'option'])
 @Unique('item_iphone_detail_uk', ['model', 'modelSuffix', 'storage'])
 export class ItemIphone extends ItemDetailEntity {
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
+
   @PrimaryColumn({ primaryKeyConstraintName: 'item_iphone_pk' })
   id: number;
+
+  @Column()
+  model: number;
+
+  @Column()
+  option: number;
 
   @Column({ type: 'enum', enum: IphoneSuffix })
   modelSuffix: IphoneSuffix;
