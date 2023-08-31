@@ -10,14 +10,23 @@ import {
 import { ItemDetailEntity } from './detall.entity';
 import { Item } from '../item.entity';
 import { Model } from '../model.entity';
-import { Chip, Ssd } from 'src/lib/enums';
+import { Chip, ItemType, Ssd } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_macbook' })
 @Unique('item_macbook_option_uk', ['model', 'option'])
 @Unique('item_macbook_detail_uk', ['model', 'chip', 'cpu', 'gpu', 'ram', 'ssd'])
 export class ItemMacbook extends ItemDetailEntity {
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
+
   @PrimaryColumn({ primaryKeyConstraintName: 'item_macbook_pk' })
   id: number;
+
+  @Column()
+  model: number;
+
+  @Column()
+  option: number;
 
   @Column({ type: 'enum', enum: Chip })
   chip: Chip;
