@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
-import { Source } from 'src/lib/enums';
+import { TradeSource } from 'src/lib/enums';
 
 export class PriceTradeRequestDto {
   @IsOptional()
@@ -9,6 +9,6 @@ export class PriceTradeRequestDto {
   unused?: boolean = false;
 
   @IsOptional()
-  @IsEnum(Source)
-  source?: Source;
+  @IsEnum(TradeSource)
+  source?: TradeSource;
 }

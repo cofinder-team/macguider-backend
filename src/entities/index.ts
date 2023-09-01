@@ -12,6 +12,7 @@ import { PriceRegular } from './price/regular.entity';
 import { PriceCoupang } from './price/coupang.entity';
 import { AlertTarget } from './alert/target.entity';
 import { ItemIphone } from './item/iphone.entity';
+import { Source } from './source.entity';
 
 export {
   AlertTarget,
@@ -24,6 +25,7 @@ export {
   ItemIphone,
   ItemDetailEntity,
   Model,
+  Source,
   PriceRegular,
   PriceCoupang,
   PriceTrade,
