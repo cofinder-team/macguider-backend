@@ -8,7 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Item } from './item.entity';
-import { ItemCondition, ItemType } from 'src/lib/enums';
+import { ItemCondition, ItemType, TradeSource } from 'src/lib/enums';
+import { Source } from './source.entity';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
@@ -34,7 +35,7 @@ export class Deal extends BaseEntity {
   unused: boolean;
 
   @Column()
-  source: string;
+  source: TradeSource;
 
   @Column()
   url: string;
@@ -80,4 +81,12 @@ export class Deal extends BaseEntity {
     },
   ])
   item: Item;
+
+  @ManyToOne(() => Source, (source) => source.deals)
+  @JoinColumn({
+    foreignKeyConstraintName: 'deal_source_source_fk',
+    name: 'source',
+    referencedColumnName: 'source',
+  })
+  sourceEntity: Source;
 }
