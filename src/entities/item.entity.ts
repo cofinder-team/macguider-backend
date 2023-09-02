@@ -14,6 +14,10 @@ import { ItemIpad } from './item/ipad.entity';
 import { AlertTarget } from './alert/target.entity';
 import { ItemIphone } from './item/iphone.entity';
 import { ItemType } from 'src/lib/enums';
+import { Vendor } from './vendor.entity';
+import { LogRegular } from './log/regular.entity';
+import { LogCoupang } from './log/coupang.entity';
+import { Trade } from './trade.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
@@ -49,4 +53,16 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.item)
   alertTargets: AlertTarget[];
+
+  @OneToMany(() => Vendor, (vendor) => vendor.item)
+  vendors: Vendor[];
+
+  @OneToMany(() => LogRegular, (logRegular) => logRegular.item)
+  regularLogs: LogRegular[];
+
+  @OneToMany(() => LogCoupang, (logCoupang) => logCoupang.item)
+  coupangLogs: LogCoupang[];
+
+  @OneToMany(() => Trade, (trade) => trade.item)
+  trades: Trade[];
 }

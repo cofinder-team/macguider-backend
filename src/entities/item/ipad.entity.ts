@@ -37,7 +37,7 @@ export class ItemIpad extends ItemDetailEntity {
   @Column()
   cellular: boolean;
 
-  @Column({ type: 'enum', enum: Chip, enumName: 'chip_enum', nullable: true })
+  @Column({ type: 'enum', enum: Chip, nullable: true })
   chip: Chip;
 
   @ManyToOne(() => Model, (model) => model.ipadItems)
