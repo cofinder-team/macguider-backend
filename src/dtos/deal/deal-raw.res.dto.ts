@@ -7,9 +7,11 @@ export class DealRawResponseDto {
   itemId: number;
   unused: boolean;
   price: number;
+  title: string;
+  content: string;
 
   static of(dealRaw: DealRaw): DealRawResponseDto {
-    const { id, url, type, itemId, unused, price } = dealRaw;
-    return { id, url, type, itemId, unused, price };
+    const { id, url, type, itemId, unused, price, title, content } = dealRaw;
+    return { id, url, type, itemId, unused, price, title, content };
   }
 }
