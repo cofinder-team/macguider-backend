@@ -5,7 +5,7 @@ import { TradeSource } from 'src/lib/enums';
 export class PriceTradeRequestDto {
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === true || value === 'true')
   unused?: boolean = false;
 
   @IsOptional()
