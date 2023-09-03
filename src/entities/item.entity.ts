@@ -19,6 +19,9 @@ import { Vendor } from './vendor.entity';
 import { LogRegular } from './log/regular.entity';
 import { LogCoupang } from './log/coupang.entity';
 import { Trade } from './trade.entity';
+import { PriceRegular } from './price/regular.entity';
+import { PriceCoupang } from './price/coupang.entity';
+import { PriceTrade } from './price/trade.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
@@ -69,4 +72,13 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => Trade, (trade) => trade.item)
   trades: Trade[];
+
+  @OneToMany(() => PriceRegular, (priceRegular) => priceRegular.item)
+  regularPrices: PriceRegular[];
+
+  @OneToMany(() => PriceCoupang, (priceCoupang) => priceCoupang.item)
+  coupangPrices: PriceCoupang[];
+
+  @OneToMany(() => PriceTrade, (priceTrade) => priceTrade.item)
+  tradePrices: PriceTrade[];
 }
