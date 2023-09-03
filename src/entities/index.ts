@@ -17,6 +17,7 @@ import { LogRegular } from './log/regular.entity';
 import { LogCoupang } from './log/coupang.entity';
 import { Trade } from './trade.entity';
 import { Vendor } from './vendor.entity';
+import { DQuery } from './dquery.entity';
 
 export {
   AlertTarget,
@@ -38,4 +39,5 @@ export {
   PriceCoupang,
   PriceTrade,
   User,
+  DQuery,
 };
