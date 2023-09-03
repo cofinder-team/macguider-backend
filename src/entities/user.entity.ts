@@ -1,17 +1,18 @@
-import { Role } from 'src/lib/enums/user.role.enum';
 import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { AlertTarget } from './alert/target.entity';
+import { Role } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'user' })
+@Unique('user_email_uk', ['email'])
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'user_pk' })
   id: number;
 
   @Column()
@@ -23,7 +24,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column()
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({ type: 'uuid' })
@@ -33,6 +34,5 @@ export class User extends BaseEntity {
   certified: boolean;
 
   @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.user)
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   alertTargets: AlertTarget[];
 }

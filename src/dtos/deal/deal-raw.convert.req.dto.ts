@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
-import { ItemType } from 'src/lib/enums/item.type.enum';
+import { ItemType } from 'src/lib/enums';
 
 export class DealRawConvertRequestDto {
   @IsBoolean()

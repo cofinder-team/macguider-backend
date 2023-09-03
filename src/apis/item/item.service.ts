@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ItemDto, ItemOptionsDto } from 'src/dtos';
 import { Item } from 'src/entities';
 import { getItemDetailRelation } from 'src/lib/relations/item.detail.relation';
-import { ItemType, getItemType } from 'src/lib/enums/item.type.enum';
+import { ItemType, getItemType } from 'src/lib/enums';
 import {
   DataSource,
   FindOptionsOrder,
@@ -53,7 +53,7 @@ export class ItemService {
     return this.itemRepository.find({ where, order, relations });
   }
 
-  async getItem(type: string, id: number): Promise<Item> {
+  async getItem(type: ItemType, id: number): Promise<Item> {
     const where: FindOptionsWhere<Item> = { type, id };
     const relations: FindOptionsRelations<Item> = getItemDetailRelation({
       modelEntity: {},
