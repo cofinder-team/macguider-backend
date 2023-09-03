@@ -8,6 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Deal } from './deal.entity';
+import { DealRaw } from './deal/raw.entity';
 import { Type } from './type.entity';
 import { ItemMacbook } from './item/macbook.entity';
 import { ItemIpad } from './item/ipad.entity';
@@ -50,6 +51,9 @@ export class Item extends BaseEntity {
 
   @OneToMany(() => Deal, (deal) => deal.item)
   deals: Deal[];
+
+  @OneToMany(() => DealRaw, (dealRaw) => dealRaw.sourceEntity)
+  rawDeals: DealRaw[];
 
   @OneToMany(() => AlertTarget, (alertTarget) => alertTarget.item)
   alertTargets: AlertTarget[];
