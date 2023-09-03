@@ -31,7 +31,7 @@ import { AlertModule } from './apis/alert/alert.module';
         database: config.get<string>('DB_DATABASE'),
         entities: [`${__dirname}/**/*.entity{.ts,.js}`],
         namingStrategy: new SnakeNamingStrategy(),
-        synchronize: false,
+        synchronize: config.get<string>('NODE_ENV') === 'dev',
       }),
     }),
     AuthModule,

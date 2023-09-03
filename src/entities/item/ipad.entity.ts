@@ -1,33 +1,72 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+  Unique,
+} from 'typeorm';
 import { ItemDetailEntity } from './detall.entity';
 import { Item } from '../item.entity';
 import { Model } from '../model.entity';
+import { Storage, Chip, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_ipad' })
+@Unique('item_ipad_option_uk', ['model', 'option'])
+@Unique('item_ipad_detail_uk', ['model', 'storage', 'gen', 'cellular'])
 export class ItemIpad extends ItemDetailEntity {
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
+
+  @PrimaryColumn({ primaryKeyConstraintName: 'item_ipad_pk' })
+  id: number;
+
+  @Column()
+  model: number;
+
+  @Column()
+  option: number;
+
+  @Column({ type: 'enum', enum: Storage })
+  storage: Storage;
+
   @Column()
   gen: number;
 
   @Column()
-  storage: number;
-
-  @Column()
   cellular: boolean;
 
-  @Column()
-  chip: string;
+  @Column({ type: 'enum', enum: Chip, nullable: true })
+  chip: Chip;
 
   @ManyToOne(() => Model, (model) => model.ipadItems)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'model', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'item_ipad_model_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'item_ipad_model_type_id_fk',
+      name: 'model',
+      referencedColumnName: 'id',
+    },
   ])
   modelEntity: Model;
 
   @OneToOne(() => Item, (item) => item.ipad)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'id', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'item_ipad_item_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'item_ipad_item_type_id_fk',
+      name: 'id',
+      referencedColumnName: 'id',
+    },
   ])
   item: Item;
 }

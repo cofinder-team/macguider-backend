@@ -12,6 +12,12 @@ import { PriceRegular } from './price/regular.entity';
 import { PriceCoupang } from './price/coupang.entity';
 import { AlertTarget } from './alert/target.entity';
 import { ItemIphone } from './item/iphone.entity';
+import { Source } from './source.entity';
+import { LogRegular } from './log/regular.entity';
+import { LogCoupang } from './log/coupang.entity';
+import { Trade } from './trade.entity';
+import { Vendor } from './vendor.entity';
+import { DQuery } from './dquery.entity';
 
 export {
   AlertTarget,
@@ -24,8 +30,14 @@ export {
   ItemIphone,
   ItemDetailEntity,
   Model,
+  Source,
+  Vendor,
+  LogRegular,
+  LogCoupang,
+  Trade,
   PriceRegular,
   PriceCoupang,
   PriceTrade,
   User,
+  DQuery,
 };
