@@ -1,23 +1,12 @@
 import { IntersectionType } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { Chip, IphoneSuffix, Ssd, Storage } from 'src/lib/enums';
 
 export class MacbookOptionsDto {
-  @IsIn([
-    'A12',
-    'A12Z',
-    'A13',
-    'A14',
-    'A15',
-    'M1',
-    'M1PRO',
-    'M1MAX',
-    'M2',
-    'M2PRO',
-    'M2MAX',
-  ])
+  @IsEnum(Chip)
   @IsOptional()
-  chip?: string;
+  chip?: Chip;
 
   @IsNumber()
   @IsOptional()
@@ -34,10 +23,9 @@ export class MacbookOptionsDto {
   @Type(() => Number)
   ram?: number;
 
-  @IsIn(['256GB', '512GB', '1TB', '2TB', '4TB'])
+  @IsEnum(Ssd)
   @IsOptional()
-  @Type(() => Number)
-  ssd?: string;
+  ssd?: Ssd;
 }
 
 export class IpadOptionsDto {
@@ -46,40 +34,28 @@ export class IpadOptionsDto {
   @Type(() => Number)
   gen?: number;
 
-  @IsIn(['32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB'])
+  @IsEnum(Storage)
   @IsOptional()
-  storage?: string;
+  storage?: Storage;
 
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === true || value === 'true')
   cellular?: boolean;
 
-  @IsIn([
-    'A12',
-    'A12Z',
-    'A13',
-    'A14',
-    'A15',
-    'M1',
-    'M1PRO',
-    'M1MAX',
-    'M2',
-    'M2PRO',
-    'M2MAX',
-  ])
+  @IsEnum(Chip)
   @IsOptional()
-  chip?: string;
+  chip?: Chip;
 }
 
 export class IphoneOptionsDto {
-  @IsIn(['DEFAULT', 'MINI', 'PLUS', 'PRO', 'PROMAX'])
+  @IsEnum(IphoneSuffix)
   @IsOptional()
-  modelSuffix?: string;
+  modelSuffix?: IphoneSuffix;
 
-  @IsIn(['32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB'])
+  @IsEnum(Storage)
   @IsOptional()
-  storage?: string;
+  storage?: Storage;
 }
 
 export class ItemOptionsDto extends IntersectionType(
