@@ -7,11 +7,10 @@ import {
   Put,
   Post,
   Query,
-  StreamableFile,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { DealService } from './deal.service';
-import { Readable } from 'typeorm/platform/PlatformTools';
 import {
   DealManageRequestDto,
   DealRawConvertRequestDto,
@@ -30,8 +29,10 @@ import { PriceService } from '../price/price.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
 import { RoleGuard } from '../auth/jwt/role.guard';
-import { Role } from 'src/lib/enums/user.role.enum';
+import { Role } from 'src/lib/enums';
 import { SlackService } from './slack/slack.service';
+import { TradeSource } from 'src/lib/enums';
+import { Response } from 'express';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -86,10 +87,13 @@ export class DealController {
   @Get('/:id/image')
   @ApiOperation({ summary: '거래 이미지 조회' })
   @Header('Content-Type', 'image/jpeg')
-  async getDealImage(@Param('id') id: number) {
+  @Header('Cache-Control', 'no-cache')
+  async getDealImage(
+    @Param('id') id: number,
+    @Res() response: Response,
+  ): Promise<void> {
     const buffer = await this.dealService.getDealImage(id);
-    const readable = Readable.from(buffer);
-    return new StreamableFile(readable);
+    response.send(buffer);
   }
 
   @Put('/:id')
@@ -128,7 +132,7 @@ export class DealController {
         const { id, url } = deal;
         return { id, url, success: false };
       } else {
-        const payload = { url, source: '당근마켓' };
+        const payload = { url, source: TradeSource.당근마켓 };
         const { id } = await this.dealService.createDealRaw(payload);
         return { id, url, success: true };
       }

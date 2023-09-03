@@ -8,14 +8,16 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Item } from './item.entity';
+import { ItemCondition, ItemType, TradeSource } from 'src/lib/enums';
+import { Source } from './source.entity';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'deal_pk' })
   id: number;
 
-  @Column()
-  type: string;
+  @Column({ type: 'varchar', length: 1 })
+  type: ItemType;
 
   @Column()
   itemId: number;
@@ -24,39 +26,67 @@ export class Deal extends BaseEntity {
   date: Date;
 
   @Column()
-  price?: number;
+  price: number;
 
-  @Column()
+  @Column({ default: false })
   sold: boolean;
 
-  @Column()
+  @Column({ default: false })
   unused: boolean;
 
   @Column()
-  source: string;
+  source: TradeSource;
 
   @Column()
   url: string;
 
-  @Column({ type: 'bytea' })
+  @Column({ type: 'bytea', nullable: true })
   image: Buffer;
 
-  @Column()
+  @Column({ type: 'timestamptz', default: () => 'now()' })
+  lastCrawled: Date;
+
+  @Column({ nullable: true })
+  writer: string;
+
+  @Column({ nullable: true })
   title: string;
 
   @Column()
   content: string;
 
-  @Column()
+  @Column({ nullable: true })
   appleCare: boolean;
 
-  @DeleteDateColumn()
+  @Column({ type: 'enum', enum: ItemCondition, nullable: true })
+  condition: ItemCondition;
+
+  @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  alertedAt: Date;
 
   @ManyToOne(() => Item, (item) => item.deals)
   @JoinColumn([
-    { name: 'type', referencedColumnName: 'type' },
-    { name: 'item_id', referencedColumnName: 'id' },
+    {
+      foreignKeyConstraintName: 'deal_item_type_id_fk',
+      name: 'type',
+      referencedColumnName: 'type',
+    },
+    {
+      foreignKeyConstraintName: 'deal_item_type_id_fk',
+      name: 'item_id',
+      referencedColumnName: 'id',
+    },
   ])
   item: Item;
+
+  @ManyToOne(() => Source, (source) => source.deals)
+  @JoinColumn({
+    foreignKeyConstraintName: 'deal_source_source_fk',
+    name: 'source',
+    referencedColumnName: 'source',
+  })
+  sourceEntity: Source;
 }
