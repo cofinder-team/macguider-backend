@@ -1,5 +1,11 @@
-import { plainToClass } from 'class-transformer';
-import { IsNumber, IsString, validateSync } from 'class-validator';
+import { Transform, plainToClass } from 'class-transformer';
+import {
+  IsArray,
+  IsIP,
+  IsNumber,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 class EnvironmentVariables {
   @IsNumber()
@@ -43,6 +49,11 @@ class EnvironmentVariables {
 
   @IsString()
   MAIL_AUTH_PASS: string;
+
+  @Transform(({ value }) => (value ? value.split(',') : []))
+  @IsArray()
+  @IsIP(4, { each: true })
+  ADMIN_ALLOW_IPS: string;
 }
 
 export const validateEnvironment = (config: Record<string, unknown>) => {
@@ -56,5 +67,6 @@ export const validateEnvironment = (config: Record<string, unknown>) => {
   if (errors.length > 0) {
     throw new Error(errors.toString());
   }
+  console.log(validatedConfig);
   return validatedConfig;
 };

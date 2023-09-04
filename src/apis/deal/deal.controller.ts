@@ -27,12 +27,13 @@ import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
-import { RoleGuard } from '../auth/jwt/role.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
+import { RoleGuard } from '../auth/guard/role.guard';
 import { Role } from 'src/lib/enums';
 import { SlackService } from './slack/slack.service';
 import { TradeSource } from 'src/lib/enums';
 import { Response } from 'express';
+import { IpGuard } from '../auth/guard/ip.guard';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -42,6 +43,12 @@ export class DealController {
     private readonly priceService: PriceService,
     private readonly slackService: SlackService,
   ) {}
+
+  @Get('test')
+  @UseGuards(IpGuard)
+  async test(): Promise<void> {
+    return;
+  }
 
   @Get()
   @ApiOperation({ summary: '핫딜 조건에 해당하는 거래 목록 조회' })
