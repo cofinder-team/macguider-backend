@@ -6,6 +6,7 @@ import { Deal, DealFiltered, DealRaw, User } from 'src/entities';
 import { PriceService } from '../price/price.service';
 import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
 import { SlackModule } from './slack/slack.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SlackModule } from './slack/slack.module';
       DealRaw,
       User,
     ]),
+    ConfigModule,
     SlackModule,
   ],
   controllers: [DealController],
