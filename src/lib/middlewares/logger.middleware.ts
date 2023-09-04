@@ -1,14 +1,14 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { Logger } from '@nestjs/common';
+import { getClientIp } from '../utils/ip.util';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   private logger = new Logger('API Call');
 
   use(request: Request, response: Response, next: NextFunction): void {
-    const ip =
-      request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+    const ip = getClientIp(request);
 
     const startAt = process.hrtime();
     const { method, originalUrl } = request;
