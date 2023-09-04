@@ -19,8 +19,8 @@ export class IpGuard implements CanActivate {
     const request: Request = ctx.switchToHttp().getRequest();
 
     const ip = getClientIp(request);
-    const allowed = this.configService.get<string>('ADMIN_ALLOW_IP');
+    const allowed = this.configService.get<string>('ADMIN_ALLOW_IPS');
 
-    return ip === allowed;
+    return allowed.includes(ip);
   }
 }
