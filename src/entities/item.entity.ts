@@ -24,6 +24,7 @@ import { PriceRegular } from './price/regular.entity';
 import { PriceCoupang } from './price/coupang.entity';
 import { PriceTrade } from './price/trade.entity';
 import { Image } from './image.entity';
+import { Model } from './model.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
@@ -55,6 +56,9 @@ export class Item extends BaseEntity {
     referencedColumnName: 'id',
   })
   image: Image;
+
+  @OneToOne(() => Model, (model) => model.mainItem)
+  representativeModel: Model;
 
   @OneToOne(() => ItemMacbook, (itemMacbook) => itemMacbook.item)
   macbook: ItemMacbook;
