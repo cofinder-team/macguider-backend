@@ -34,6 +34,15 @@ export class ItemIphone extends ItemDetailEntity {
   @Column({ type: 'enum', enum: Storage })
   storage: Storage;
 
+  @Column({ nullable: true })
+  year: number;
+
+  @Column({ type: 'date', nullable: true })
+  releasedAt: Date;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  colors: string[];
+
   @ManyToOne(() => Model, (model) => model.iphoneItems)
   @JoinColumn([
     {

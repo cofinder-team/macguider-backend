@@ -40,6 +40,15 @@ export class ItemIpad extends ItemDetailEntity {
   @Column({ type: 'enum', enum: Chip, nullable: true })
   chip: Chip;
 
+  @Column({ nullable: true })
+  year: number;
+
+  @Column({ type: 'date', nullable: true })
+  releasedAt: Date;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  colors: string[];
+
   @ManyToOne(() => Model, (model) => model.ipadItems)
   @JoinColumn([
     {
