@@ -12,6 +12,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { AuthModule } from './apis/auth/auth.module';
 import { UserModule } from './apis/user/user.module';
 import { AlertModule } from './apis/alert/alert.module';
+import { ModelModule } from './apis/model/model.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AlertModule } from './apis/alert/alert.module';
     UserModule,
     DealModule,
     ItemModule,
+    ModelModule,
     PriceModule,
     AlertModule,
     TerminusModule,

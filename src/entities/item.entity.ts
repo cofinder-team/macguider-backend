@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -22,6 +23,8 @@ import { Trade } from './trade.entity';
 import { PriceRegular } from './price/regular.entity';
 import { PriceCoupang } from './price/coupang.entity';
 import { PriceTrade } from './price/trade.entity';
+import { Image } from './image.entity';
+import { Model } from './model.entity';
 
 @Entity({ schema: 'macguider', name: 'item' })
 export class Item extends BaseEntity {
@@ -35,6 +38,9 @@ export class Item extends BaseEntity {
   @PrimaryColumn({ primaryKeyConstraintName: 'item_pk' })
   id: number;
 
+  @Column({ nullable: true })
+  imageId: number;
+
   @ManyToOne(() => Type, (type) => type.items)
   @JoinColumn({
     foreignKeyConstraintName: 'item_type_type_fk',
@@ -42,6 +48,17 @@ export class Item extends BaseEntity {
     referencedColumnName: 'type',
   })
   typeEntity: Type;
+
+  @ManyToOne(() => Image, (image) => image.items)
+  @JoinColumn({
+    foreignKeyConstraintName: 'item_image_id_fk',
+    name: 'image_id',
+    referencedColumnName: 'id',
+  })
+  image: Image;
+
+  @OneToOne(() => Model, (model) => model.mainItem)
+  representativeModel: Model;
 
   @OneToOne(() => ItemMacbook, (itemMacbook) => itemMacbook.item)
   macbook: ItemMacbook;
