@@ -18,6 +18,7 @@ import { LogCoupang } from './log/coupang.entity';
 import { Trade } from './trade.entity';
 import { Vendor } from './vendor.entity';
 import { DQuery } from './dquery.entity';
+import { Image } from './image.entity';
 
 export {
   AlertTarget,
@@ -40,4 +41,5 @@ export {
   PriceTrade,
   User,
   DQuery,
+  Image,
 };
