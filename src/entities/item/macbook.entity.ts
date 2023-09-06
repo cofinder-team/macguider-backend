@@ -43,6 +43,15 @@ export class ItemMacbook extends ItemDetailEntity {
   @Column({ type: 'enum', enum: Ssd })
   ssd: Ssd;
 
+  @Column({ nullable: true })
+  year: number;
+
+  @Column({ type: 'date', nullable: true })
+  releasedAt: Date;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  colors: string[];
+
   @ManyToOne(() => Model, (model) => model.macbookItems)
   @JoinColumn([
     {
