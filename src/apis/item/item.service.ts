@@ -46,18 +46,20 @@ export class ItemService {
   async getItems(options: FindOptionsWhere<Item>): Promise<Item[]> {
     const where: FindOptionsWhere<Item> = { ...options };
     const order: FindOptionsOrder<Item> = { type: 'ASC', id: 'ASC' };
-    const relations: FindOptionsRelations<Item> = getItemDetailRelation({
-      modelEntity: {},
-    });
+    const relations: FindOptionsRelations<Item> = {
+      image: {},
+      ...getItemDetailRelation({ modelEntity: {} }),
+    };
 
     return this.itemRepository.find({ where, order, relations });
   }
 
   async getItem(type: ItemType, id: number): Promise<Item> {
     const where: FindOptionsWhere<Item> = { type, id };
-    const relations: FindOptionsRelations<Item> = getItemDetailRelation({
-      modelEntity: {},
-    });
+    const relations: FindOptionsRelations<Item> = {
+      image: {},
+      ...getItemDetailRelation({ modelEntity: {} }),
+    };
 
     return this.itemRepository.findOneOrFail({ where, relations });
   }

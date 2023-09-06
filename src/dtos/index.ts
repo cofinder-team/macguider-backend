@@ -4,4 +4,5 @@ export * from './common';
 export * from './deal';
 export * from './alert';
 export * from './item';
+export * from './model';
 export * from './price';
