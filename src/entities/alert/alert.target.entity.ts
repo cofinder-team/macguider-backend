@@ -8,7 +8,7 @@ import {
   Unique,
 } from 'typeorm';
 import { User } from '../user.entity';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'alert_target' })

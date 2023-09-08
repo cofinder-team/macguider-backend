@@ -6,8 +6,8 @@ import {
   Unique,
 } from 'typeorm';
 import { TradeSource } from '../lib/enums';
-import { Deal } from './deal.entity';
-import { DealRaw } from './deal/raw.entity';
+import { Deal } from './deal/deal.entity';
+import { DealRaw } from './deal/deal.raw.entity';
 import { Trade } from './trade.entity';
 
 @Entity({ schema: 'macguider', name: 'source' })

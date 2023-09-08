@@ -6,13 +6,13 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { LogCoupang } from '../log/coupang.entity';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 import { DQuery } from '../dquery.entity';
+import { LogRegular } from '../log/log.regular.entity';
 
 @ViewEntity({
   schema: 'macguider',
-  name: 'price_coupang',
+  name: 'price_regular',
   expression: (dataSource: DataSource) =>
     dataSource
       .createQueryBuilder()
@@ -44,16 +44,16 @@ import { DQuery } from '../dquery.entity';
               'c',
             )
             .leftJoin(
-              LogCoupang,
+              LogRegular,
               't',
-              "t.type::text = c.type::text AND t.item_id = c.id AND t.date >= c.date AND t.date < (c.date + '1 day'::interval)",
+              "t.type::text = c.type::text AND t.item_id = c.id AND t.date < (c.date + '1 day'::interval)",
             )
             .orderBy('t.date', 'DESC'),
         'r',
       )
       .where('r.drank <= 1'),
 })
-export class PriceCoupang extends BaseEntity {
+export class PriceRegular extends BaseEntity {
   @ViewColumn()
   type: string;
 
@@ -69,7 +69,7 @@ export class PriceCoupang extends BaseEntity {
   @ViewColumn()
   log: Date;
 
-  @ManyToOne(() => Item, (item) => item.coupangPrices)
+  @ManyToOne(() => Item, (item) => item.regularPrices)
   @JoinColumn([
     { name: 'type', referencedColumnName: 'type' },
     { name: 'id', referencedColumnName: 'id' },

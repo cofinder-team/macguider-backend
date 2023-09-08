@@ -8,12 +8,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 
-@Entity({ schema: 'macguider', name: 'log_coupang' })
-@Index('log_coupang_type_item_id_index', ['type', 'itemId'])
-export class LogCoupang extends BaseEntity {
-  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'log_coupang_pk' })
+@Entity({ schema: 'macguider', name: 'log_regular' })
+@Index('log_regular_type_item_id_index', ['type', 'itemId'])
+export class LogRegular extends BaseEntity {
+  @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'log_regular_pk' })
   id: number;
 
   @Column({ type: 'varchar', length: 1 })
@@ -28,15 +28,15 @@ export class LogCoupang extends BaseEntity {
   @Column({ nullable: true })
   price: number;
 
-  @ManyToOne(() => Item, (item) => item.coupangLogs)
+  @ManyToOne(() => Item, (item) => item.regularLogs)
   @JoinColumn([
     {
-      foreignKeyConstraintName: 'log_coupang_item_type_id_fk',
+      foreignKeyConstraintName: 'log_regular_item_type_id_fk',
       name: 'type',
       referencedColumnName: 'type',
     },
     {
-      foreignKeyConstraintName: 'log_coupang_item_type_id_fk',
+      foreignKeyConstraintName: 'log_regular_item_type_id_fk',
       name: 'item_id',
       referencedColumnName: 'id',
     },

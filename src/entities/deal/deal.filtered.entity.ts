@@ -4,7 +4,7 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { Deal } from '../deal.entity';
+import { Deal } from './deal.entity';
 import { Trade } from '../trade.entity';
 
 @ViewEntity({

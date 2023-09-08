@@ -7,9 +7,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Item } from './item.entity';
+import { Item } from '../item/item.entity';
 import { ItemCondition, ItemType, TradeSource } from 'src/lib/enums';
-import { Source } from './source.entity';
+import { Source } from '../source.entity';
 
 @Entity({ schema: 'macguider', name: 'deal' })
 export class Deal extends BaseEntity {

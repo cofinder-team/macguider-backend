@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -7,15 +8,15 @@ import {
   PrimaryColumn,
   Unique,
 } from 'typeorm';
-import { ItemDetailEntity } from './detall.entity';
-import { Item } from '../item.entity';
-import { Model } from '../model.entity';
+import { ItemDetail } from './item.detall';
+import { Item } from './item.entity';
+import { Model } from '../model/model.entity';
 import { Chip, ItemType, Ssd } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_macbook' })
 @Unique('item_macbook_option_uk', ['model', 'option'])
 @Unique('item_macbook_detail_uk', ['model', 'chip', 'cpu', 'gpu', 'ram', 'ssd'])
-export class ItemMacbook extends ItemDetailEntity {
+export class ItemMacbook extends BaseEntity implements ItemDetail {
   @Column({ type: 'varchar', length: 1 })
   type: ItemType;
 
