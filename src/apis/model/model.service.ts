@@ -18,9 +18,14 @@ export class ModelService {
 
   async getModels(options: FindOptionsWhere<Model>): Promise<Model[]> {
     const where: FindOptionsWhere<Model> = { ...options };
-    const order: FindOptionsOrder<Model> = { type: 'ASC', id: 'ASC' };
+    const order: FindOptionsOrder<Model> = {
+      type: 'ASC',
+      id: 'ASC',
+      histories: { date: 'DESC' },
+    };
     const relations: FindOptionsRelations<Model> = {
       mainItem: { image: {} },
+      histories: {},
     };
 
     return this.modelRepository.find({ where, order, relations });
@@ -28,8 +33,14 @@ export class ModelService {
 
   async getModel(type: ItemType, id: number): Promise<Model> {
     const where: FindOptionsWhere<Model> = { type, id };
-    const relations: FindOptionsRelations<Model> = { mainItem: { image: {} } };
+    const order: FindOptionsOrder<Model> = {
+      histories: { date: 'DESC' },
+    };
+    const relations: FindOptionsRelations<Model> = {
+      mainItem: { image: {} },
+      histories: {},
+    };
 
-    return this.modelRepository.findOneOrFail({ where, relations });
+    return this.modelRepository.findOneOrFail({ where, order, relations });
   }
 }
