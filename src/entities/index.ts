@@ -19,6 +19,7 @@ import { Trade } from './trade.entity';
 import { Vendor } from './vendor.entity';
 import { DQuery } from './dquery.entity';
 import { Image } from './image.entity';
+import { ModelHistory } from './model/model.history.entity';
 
 export {
   AlertTarget,
@@ -31,6 +32,7 @@ export {
   ItemIphone,
   ItemDetail,
   Model,
+  ModelHistory,
   Source,
   Vendor,
   LogRegular,
