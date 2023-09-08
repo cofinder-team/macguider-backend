@@ -22,7 +22,6 @@ import {
   DealRawCreateRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
-import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { EntityNotFoundError } from 'typeorm';
 import { Deal } from 'src/entities';
 import { PriceService } from '../price/price.service';
@@ -184,9 +183,9 @@ export class DealController {
   async reportDeal(
     @Param('id') id: number,
     @Body() body: DealReportRequestDto,
-  ): Promise<AxiosResponse> {
+  ): Promise<void> {
     const { report } = body;
 
-    return this.slackService.sendSlackReport(id, report);
+    await this.slackService.sendSlackReport(id, report);
   }
 }
