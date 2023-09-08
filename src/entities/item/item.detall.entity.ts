@@ -1,6 +1,6 @@
 import { BaseEntity } from 'typeorm';
-import { Model } from '../model.entity';
-import { Item } from '../item.entity';
+import { Model } from '../model/model.entity';
+import { Item } from './item.entity';
 import { ItemType } from 'src/lib/enums';
 
 export class ItemDetailEntity extends BaseEntity {

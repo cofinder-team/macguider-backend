@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Item } from './item.entity';
+import { Item } from './item/item.entity';
 import { Source } from './source.entity';
 import { TradeSource } from 'src/lib/enums';
 

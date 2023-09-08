@@ -7,9 +7,9 @@ import {
   PrimaryColumn,
   Unique,
 } from 'typeorm';
-import { ItemDetailEntity } from './detall.entity';
-import { Item } from '../item.entity';
-import { Model } from '../model.entity';
+import { ItemDetailEntity } from './item.detall.entity';
+import { Item } from './item.entity';
+import { Model } from '../model/model.entity';
 import { Storage, Chip, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_ipad' })

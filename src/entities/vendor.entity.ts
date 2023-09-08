@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Item } from './item.entity';
+import { Item } from './item/item.entity';
 
 @Entity({ schema: 'macguider', name: 'vendor' })
 @Unique('vendor_vendor_uk', ['product', 'vendor'])

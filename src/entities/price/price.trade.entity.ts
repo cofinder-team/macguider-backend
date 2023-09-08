@@ -7,7 +7,7 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 import { DQuery } from '../dquery.entity';
 import { Trade } from '../trade.entity';
 import { Source } from '../source.entity';
