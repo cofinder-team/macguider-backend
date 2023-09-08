@@ -35,7 +35,8 @@ import { Trade } from '../trade.entity';
                   .groupBy('d.id'),
               'average',
             )
-            .from(Deal, 'd'),
+            .from(Deal, 'd')
+            .where('d.pending = false'),
         'r',
       )
       .where('r.price < r.average');
