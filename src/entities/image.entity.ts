@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Item } from './item.entity';
+import { Item } from './item/item.entity';
 
 @Entity({ schema: 'macguider', name: 'image' })
 export class Image {

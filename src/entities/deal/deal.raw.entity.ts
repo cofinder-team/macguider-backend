@@ -9,7 +9,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Source } from '../source.entity';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 
 @Entity({ schema: 'macguider', name: 'raw_used_item' })
 @Unique('raw_used_item_url_uk', ['url', 'source'])
