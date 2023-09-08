@@ -1,4 +1,4 @@
-import { Item, ItemDetailEntity } from 'src/entities';
+import { Item, ItemDetail } from 'src/entities';
 import { ModelResponseDto } from '../model/model.res.dto';
 import { ImageResponseDto } from '../common/image.res.dto';
 
@@ -11,7 +11,7 @@ export class ItemResponseDto {
   details?: object;
 
   static of(item: Item): ItemResponseDto {
-    const extract = (entity: ItemDetailEntity): Partial<ItemResponseDto> => {
+    const extract = (entity: ItemDetail): Partial<ItemResponseDto> => {
       if (!entity) {
         return {};
       }
@@ -28,7 +28,7 @@ export class ItemResponseDto {
     };
 
     const { type, id, image, macbook, ipad, iphone } = item;
-    const details: ItemDetailEntity = macbook || ipad || iphone || undefined;
+    const details: ItemDetail = macbook || ipad || iphone || undefined;
 
     return {
       type,
