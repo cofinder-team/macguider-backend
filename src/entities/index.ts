@@ -1,7 +1,7 @@
 import { Deal } from './deal/deal.entity';
 import { DealRaw } from './deal/deal.raw.entity';
 import { DealFiltered } from './deal/deal.filtered.entity';
-import { ItemDetailEntity } from './item/item.detall.entity';
+import { ItemDetail } from './item/item.detall';
 import { Item } from './item/item.entity';
 import { ItemIpad } from './item/item.ipad.entity';
 import { ItemMacbook } from './item/item.macbook.entity';
@@ -29,7 +29,7 @@ export {
   ItemMacbook,
   ItemIpad,
   ItemIphone,
-  ItemDetailEntity,
+  ItemDetail,
   Model,
   Source,
   Vendor,
