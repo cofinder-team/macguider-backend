@@ -134,8 +134,12 @@ export class DealController {
     const payload = { ...info, pending };
     const { id } = await this.dealService.createDeal(payload);
 
-    // TODO: link image entity with static url
-    console.log(id, imageUrl);
+    // TODO: replace logic with image server
+    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const { id: imageId } = await this.imageService.createImage(interImage);
+
+    const image = await this.dealService.fetchImage(imageUrl);
+    await this.dealService.updateDeal(id, { imageId, image });
   }
 
   @Post('/raw')

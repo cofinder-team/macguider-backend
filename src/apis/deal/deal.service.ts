@@ -122,6 +122,15 @@ export class DealService {
     await this.dealRawRepository.update({ id }, { classified: true });
   }
 
+  async fetchImage(url: string): Promise<Buffer> {
+    return fetch(url)
+      .then((res) => res.arrayBuffer().then(Buffer.from))
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
+  }
+
   async createDeal(payload: Partial<Deal>): Promise<Deal> {
     return this.dealRepository.create(payload).save();
   }
@@ -141,12 +150,7 @@ export class DealService {
       content,
     } = dealRaw;
 
-    const image = await fetch(`${imgUrl}?type=w300`)
-      .then((res) => res.arrayBuffer().then(Buffer.from))
-      .catch((e) => {
-        console.log(e);
-        return null;
-      });
+    const image = await this.fetchImage(`${imgUrl}?type=w300`);
 
     const deal = {
       type,
