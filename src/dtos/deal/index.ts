@@ -5,10 +5,14 @@ import { DealReportRequestDto } from './deal.report.req.dto';
 import { DealRequestDto } from './deal.req.dto';
 import { DealFilteredResponseDto, DealResponseDto } from './deal.res.dto';
 import { DealRawCreateRequestDto } from './deal-raw.create.req.dto';
+import { DealCreateRequestDto } from './deal.create.req.dto';
+import { DealStateRequestDto } from './deal.state.req.dto';
 
 export {
   DealRequestDto,
   DealResponseDto,
+  DealCreateRequestDto,
+  DealStateRequestDto,
   DealManageRequestDto,
   DealReportRequestDto,
   DealRawCreateRequestDto,

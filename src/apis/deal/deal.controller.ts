@@ -20,6 +20,8 @@ import {
   DealRequestDto,
   DealResponseDto,
   DealRawCreateRequestDto,
+  DealStateRequestDto,
+  DealCreateRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
@@ -32,6 +34,8 @@ import { Role } from 'src/lib/enums';
 import { SlackService } from './slack/slack.service';
 import { TradeSource } from 'src/lib/enums';
 import { Response } from 'express';
+import { IpGuard } from '../auth/guard/ip.guard';
+import { ImageService } from '../image/image.service';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -39,6 +43,7 @@ export class DealController {
   constructor(
     private readonly dealService: DealService,
     private readonly priceService: PriceService,
+    private readonly imageService: ImageService,
     private readonly slackService: SlackService,
   ) {}
 
@@ -116,6 +121,23 @@ export class DealController {
     if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
+  @Post()
+  @UseGuards(IpGuard)
+  @ApiOperation({ summary: '수집된 거래 정보 등록 (Whitelisted IP 전용)' })
+  async createDeal(
+    @Query() state: DealStateRequestDto,
+    @Body() body: DealCreateRequestDto,
+  ): Promise<void> {
+    const { pending } = state;
+    const { imageUrl, ...info } = body;
+
+    const payload = { ...info, pending };
+    const { id } = await this.dealService.createDeal(payload);
+
+    // TODO: link image entity with static url
+    console.log(id, imageUrl);
+  }
+
   @Post('/raw')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
@@ -165,7 +187,7 @@ export class DealController {
 
     const { valid, ...payload } = body;
     if (valid) {
-      await this.dealService.createDeal(id, payload);
+      await this.dealService.createDealFromRaw(id, payload);
     }
 
     await this.dealService.classifyDealRaw(id);

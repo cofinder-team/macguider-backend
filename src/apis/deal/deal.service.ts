@@ -122,7 +122,11 @@ export class DealService {
     await this.dealRawRepository.update({ id }, { classified: true });
   }
 
-  async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
+  async createDeal(payload: Partial<Deal>): Promise<Deal> {
+    return this.dealRepository.create(payload).save();
+  }
+
+  async createDealFromRaw(id: number, payload: Partial<Deal>): Promise<void> {
     const dealRaw = await this.getDealRaw(id);
     const {
       price,
