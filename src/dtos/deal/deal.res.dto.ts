@@ -8,6 +8,7 @@ import {
 import { ItemResponseDto } from '../item';
 import { PriceTradeResponseDto } from '../price/price.trade.res.dto';
 import { PriceCoupangResponseDto, PriceRegularResponseDto } from '../price';
+import { ImageResponseDto } from '../common';
 
 abstract class DealAbstractResponseDto {
   id: number;
@@ -18,10 +19,22 @@ abstract class DealAbstractResponseDto {
   unused: boolean;
   source: string;
   url: string;
+  image?: ImageResponseDto;
 
   static of(deal: Deal): DealAbstractResponseDto {
-    const { id, type, itemId, item, date, price, sold, unused, source, url } =
-      deal;
+    const {
+      id,
+      type,
+      itemId,
+      item,
+      date,
+      price,
+      sold,
+      unused,
+      source,
+      url,
+      imageEntity,
+    } = deal;
 
     return {
       id,
@@ -32,6 +45,7 @@ abstract class DealAbstractResponseDto {
       unused,
       source,
       url,
+      image: imageEntity ? ImageResponseDto.of(imageEntity) : undefined,
     };
   }
 }

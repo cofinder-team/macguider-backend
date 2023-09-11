@@ -74,6 +74,7 @@ export class DealService {
 
     const relations: FindOptionsRelations<DealFiltered> = {
       item: getItemDetailRelation({ modelEntity: {} }),
+      imageEntity: {},
     };
 
     return this.getDeals(where, order, page, relations);
@@ -82,7 +83,10 @@ export class DealService {
   async getDeal(id: number): Promise<Deal> {
     return this.dealRepository.findOneOrFail({
       where: { id },
-      relations: { item: getItemDetailRelation({ modelEntity: {} }) },
+      relations: {
+        item: getItemDetailRelation({ modelEntity: {} }),
+        imageEntity: {},
+      },
     });
   }
 
