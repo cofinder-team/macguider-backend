@@ -25,6 +25,7 @@ import {
   DealCreateRequestDto,
   DealUpdateRequestDto,
   DealRemoveRequestDto,
+  DealSearchRequestDto,
   DealFilteredResponseDto,
   DealDetailResponseDto,
 } from 'src/dtos';
@@ -73,9 +74,34 @@ export class DealController {
     return deals.map(DealFilteredResponseDto.of);
   }
 
+  @Get('/sale')
+  @UseGuards(IpGuard)
+  @ApiOperation({
+    summary: '판매 중 상태인 전체 거래 목록 조회 (Whitelisted IP 전용)',
+  })
+  async getDealsOnSale(): Promise<DealResponseDto[]> {
+    const deals = await this.dealService.getDealsOnSale();
+    return deals.map(DealResponseDto.of);
+  }
+
+  @Get('/search')
+  @UseGuards(IpGuard)
+  @ApiOperation({
+    summary: '특정 조건에 해당하는 거래 목록 조회 (Whitelisted IP 전용)',
+  })
+  async getDealsSearch(
+    @Query() query: DealSearchRequestDto,
+  ): Promise<DealResponseDto[]> {
+    const { type, itemId, writer } = query;
+    const options = { type, itemId, writer };
+
+    const deals = await this.dealService.getDealsSearch(options);
+    return deals.map(DealResponseDto.of);
+  }
+
   @Get('/:id')
   @ApiOperation({ summary: '거래 상세 정보 조회 (가격 정보 포함)' })
-  async getDeal(@Param('id') id: number): Promise<DealResponseDto> {
+  async getDeal(@Param('id') id: number): Promise<DealDetailResponseDto> {
     const deal = await this.dealService.getDeal(id);
     const { type, itemId } = deal;
 
@@ -84,7 +110,7 @@ export class DealController {
     const coupangPrice = await this.priceService.getRecentCoupangPrice(item);
     const tradePrice = await this.priceService.getRecentTradePrice(item);
 
-    return DealResponseDto.of(
+    return DealDetailResponseDto.of(
       Object.assign(deal, {
         regularPrice,
         coupangPrice,

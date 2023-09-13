@@ -81,6 +81,24 @@ export class DealService {
     });
   }
 
+  async getDealsOnSale(): Promise<Deal[]> {
+    const where: FindOptionsWhere<Deal> = { sold: false };
+    const order: FindOptionsOrder<Deal> = { id: 'ASC' };
+    const page: FindOptionsPage = {};
+    const relations: FindOptionsRelations<Deal> = {};
+
+    return this.getDealsFiltered(where, order, page, relations);
+  }
+
+  async getDealsSearch(options: FindOptionsWhere<Deal>): Promise<Deal[]> {
+    const where: FindOptionsWhere<Deal> = { ...options };
+    const order: FindOptionsOrder<Deal> = { id: 'ASC' };
+    const page: FindOptionsPage = {};
+    const relations: FindOptionsRelations<Deal> = {};
+
+    return this.getDeals(where, order, page, relations);
+  }
+
   async getDealsFilteredByOptions(
     options: FindOptionsWhere<DealFiltered>,
     order: FindOptionsOrder<DealFiltered>,

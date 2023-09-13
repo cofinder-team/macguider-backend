@@ -13,6 +13,7 @@ import { DealCreateRequestDto } from './deal.create.req.dto';
 import { DealStateRequestDto } from './deal.state.req.dto';
 import { DealUpdateRequestDto } from './deal.update.req.dto';
 import { DealRemoveRequestDto } from './deal.remove.req.dto';
+import { DealSearchRequestDto } from './deal.search.request.dto';
 
 export {
   DealRequestDto,
@@ -23,6 +24,7 @@ export {
   DealStateRequestDto,
   DealUpdateRequestDto,
   DealRemoveRequestDto,
+  DealSearchRequestDto,
   DealManageRequestDto,
   DealReportRequestDto,
   DealRawCreateRequestDto,
