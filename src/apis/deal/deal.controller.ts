@@ -17,7 +17,6 @@ import {
   DealManageRequestDto,
   DealRawConvertRequestDto,
   DealRawResponseDto,
-  DealFilteredResponseDto,
   DealReportRequestDto,
   DealRequestDto,
   DealResponseDto,
@@ -26,6 +25,8 @@ import {
   DealCreateRequestDto,
   DealUpdateRequestDto,
   DealRemoveRequestDto,
+  DealFilteredResponseDto,
+  DealDetailResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
