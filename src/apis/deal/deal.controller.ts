@@ -4,6 +4,7 @@ import {
   Get,
   Header,
   Param,
+  Patch,
   Put,
   Post,
   Query,
@@ -100,27 +101,6 @@ export class DealController {
     response.send(buffer);
   }
 
-  @Put('/:id')
-  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
-  @ApiOperation({
-    summary: '거래 정보 수정 및 삭제 (Admin Console [Manage] 전용)',
-  })
-  @ApiBearerAuth()
-  async manageDeal(
-    @Param('id') id: number,
-    @Body() body: DealManageRequestDto,
-  ): Promise<void> {
-    await this.dealService.getDeal(id);
-
-    const { remove, ...payload } = body;
-
-    const { affected } = await (remove
-      ? this.dealService.deleteDeal(id)
-      : this.dealService.updateDeal(id, payload));
-
-    if (!affected) throw new EntityNotFoundError(Deal, id);
-  }
-
   @Post()
   @UseGuards(IpGuard)
   @ApiOperation({ summary: '수집된 거래 정보 등록 (Whitelisted IP 전용)' })
@@ -140,11 +120,33 @@ export class DealController {
 
     const image = await this.dealService.fetchImage(imageUrl);
     await this.dealService.updateDeal(id, { imageId, image });
+
+    // TODO: send slack message if pending
+  }
+
+  @Patch('/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({ summary: '거래 정보 매뉴얼하게 관리 (Admin Console 전용)' })
+  @ApiBearerAuth()
+  async manageDeal(
+    @Param('id') id: number,
+    @Body() body: DealManageRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDeal(id);
+
+    const { remove, ...data } = body;
+    const payload = { ...data, pending: false };
+
+    const { affected } = remove
+      ? await this.dealService.deleteDeal(id)
+      : await this.dealService.updateDeal(id, payload);
+    if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
   @Post('/raw')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
+    deprecated: true,
     summary: '수집된 raw 거래 정보 등록 (Mobile Crawler 전용)',
   })
   @ApiBearerAuth()
@@ -169,6 +171,7 @@ export class DealController {
   @Get('/raw/:id')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
+    deprecated: true,
     summary: '수집된 raw 거래 정보 확인 (Admin Console [Raw] 전용)',
   })
   @ApiBearerAuth()
@@ -180,6 +183,7 @@ export class DealController {
   @Put('/raw/:id')
   @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
   @ApiOperation({
+    deprecated: true,
     summary: '수집된 raw 정보를 거래 내역에 등록 (Admin Console [Raw] 전용)',
   })
   @ApiBearerAuth()
