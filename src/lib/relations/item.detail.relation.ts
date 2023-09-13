@@ -1,8 +1,8 @@
-import { Item, ItemDetailEntity } from 'src/entities';
+import { Item, ItemDetail } from 'src/entities';
 import { FindOptionsRelations } from 'typeorm';
 
 const getItemDetailRelation = (
-  inner: FindOptionsRelations<ItemDetailEntity>,
+  inner: FindOptionsRelations<ItemDetail>,
 ): FindOptionsRelations<Item> => ({
   macbook: { ...inner },
   ipad: { ...inner },

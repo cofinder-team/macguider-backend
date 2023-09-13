@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { Model } from './model.entity';
-import { Item } from './item.entity';
+import { Model } from './model/model.entity';
+import { Item } from './item/item.entity';
 import { ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'type' })

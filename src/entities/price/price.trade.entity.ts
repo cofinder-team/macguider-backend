@@ -7,7 +7,7 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { Item } from '../item.entity';
+import { Item } from '../item/item.entity';
 import { DQuery } from '../dquery.entity';
 import { Trade } from '../trade.entity';
 import { Source } from '../source.entity';
@@ -58,7 +58,7 @@ import { TradeSource } from 'src/lib/enums';
               'price_20',
             )
             .addSelect(
-              'CASE WHEN percent_rank() OVER (PARTITION BY c.type, c.id, c.unused, c.date, c.source ORDER BY t.price) < 0.8 THEN t.price - t.care::integer * 100000 ELSE NULL END',
+              'CASE WHEN percent_rank() OVER (PARTITION BY c.type, c.id, c.unused, c.date, c.source ORDER BY t.price) > 0.8 THEN t.price - t.care::integer * 100000 ELSE NULL END',
               'price_80',
             )
             .from(

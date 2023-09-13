@@ -1,29 +1,40 @@
-import { Item, ItemDetailEntity } from 'src/entities';
-import { ModelResponseDto } from './model.res.dto';
+import { Item, ItemDetail } from 'src/entities';
+import { ModelResponseDto } from '../model/model.res.dto';
+import { ImageResponseDto } from '../common/image.res.dto';
 
 export class ItemResponseDto {
   type: string;
   id: number;
+  image?: ImageResponseDto;
   model?: ModelResponseDto;
   option?: number;
   details?: object;
 
   static of(item: Item): ItemResponseDto {
-    const { macbook, ipad, iphone } = item;
-    const itemDetail: ItemDetailEntity = macbook || ipad || iphone || undefined;
+    const extract = (entity: ItemDetail): Partial<ItemResponseDto> => {
+      if (!entity) {
+        return {};
+      }
 
-    if (!itemDetail) {
-      const { type, id } = item;
-      return { type, id };
-    }
+      const { type, id, option, model, modelEntity, ...details } = entity;
 
-    const { type, id, option, model, modelEntity, ...details } = itemDetail;
+      return {
+        type,
+        id,
+        model: model ? ModelResponseDto.of(modelEntity) : undefined,
+        option,
+        details,
+      };
+    };
+
+    const { type, id, image, macbook, ipad, iphone } = item;
+    const details: ItemDetail = macbook || ipad || iphone || undefined;
+
     return {
       type,
       id,
-      ...(model ? { model: ModelResponseDto.of(modelEntity) } : {}),
-      option,
-      details,
+      image: image ? ImageResponseDto.of(image) : undefined,
+      ...extract(details),
     };
   }
 }

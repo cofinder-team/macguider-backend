@@ -18,7 +18,7 @@ import {
   AuthUserDto,
   UserResponseDto,
 } from 'src/dtos';
-import { JwtAuthGuard } from './jwt/jwt.auth.guard';
+import { JwtAuthGuard } from './guard/jwt.auth.guard';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { MailService } from './mail/mail.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';

@@ -12,7 +12,7 @@ import {
 import { AlertService } from './alert.service';
 import { AuthUser } from 'src/lib/decorators/auth.user.decorator';
 import { AuthUserDto } from 'src/dtos';
-import { JwtAuthGuard } from '../auth/jwt/jwt.auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   AlertCreateRequestDto,

@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { AlertTarget } from './alert/target.entity';
+import { AlertTarget } from './alert/alert.target.entity';
 import { Role } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'user' })

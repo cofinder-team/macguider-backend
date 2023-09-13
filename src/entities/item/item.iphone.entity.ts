@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -7,15 +8,15 @@ import {
   PrimaryColumn,
   Unique,
 } from 'typeorm';
-import { ItemDetailEntity } from './detall.entity';
-import { Model } from '../model.entity';
-import { Item } from '../item.entity';
+import { ItemDetail } from './item.detall';
+import { Model } from '../model/model.entity';
+import { Item } from './item.entity';
 import { Storage, IphoneSuffix, ItemType } from 'src/lib/enums';
 
 @Entity({ schema: 'macguider', name: 'item_iphone' })
 @Unique('item_iphone_option_uk', ['model', 'option'])
 @Unique('item_iphone_detail_uk', ['model', 'modelSuffix', 'storage'])
-export class ItemIphone extends ItemDetailEntity {
+export class ItemIphone extends BaseEntity implements ItemDetail {
   @Column({ type: 'varchar', length: 1 })
   type: ItemType;
 
@@ -33,6 +34,15 @@ export class ItemIphone extends ItemDetailEntity {
 
   @Column({ type: 'enum', enum: Storage })
   storage: Storage;
+
+  @Column({ nullable: true })
+  year: number;
+
+  @Column({ type: 'date', nullable: true })
+  releasedAt: Date;
+
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  colors: string[];
 
   @ManyToOne(() => Model, (model) => model.iphoneItems)
   @JoinColumn([
