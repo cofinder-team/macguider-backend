@@ -5,13 +5,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Item } from '../item/item.entity';
 import { ItemCondition, ItemType, TradeSource } from 'src/lib/enums';
 import { Source } from '../source.entity';
+import { Image } from '../image.entity';
 
 @Entity({ schema: 'macguider', name: 'deal' })
+@Unique('deal_image_uk', ['imageId'])
 export class Deal extends BaseEntity {
   @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'deal_pk' })
   id: number;
@@ -43,6 +47,9 @@ export class Deal extends BaseEntity {
   @Column({ type: 'bytea', nullable: true })
   image: Buffer;
 
+  @Column({ nullable: true })
+  imageId: number;
+
   @Column({ type: 'timestamptz', default: () => 'now()' })
   lastCrawled: Date;
 
@@ -67,6 +74,9 @@ export class Deal extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true })
   alertedAt: Date;
 
+  @Column({ default: false })
+  pending: boolean;
+
   @ManyToOne(() => Item, (item) => item.deals)
   @JoinColumn([
     {
@@ -89,4 +99,12 @@ export class Deal extends BaseEntity {
     referencedColumnName: 'source',
   })
   sourceEntity: Source;
+
+  @OneToOne(() => Image, (image) => image.deal, { nullable: true })
+  @JoinColumn({
+    foreignKeyConstraintName: 'deal_image_id_fk',
+    name: 'image_id',
+    referencedColumnName: 'id',
+  })
+  imageEntity: Image;
 }

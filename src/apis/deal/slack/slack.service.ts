@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { firstValueFrom, map } from 'rxjs';
 
 @Injectable()
@@ -15,15 +14,25 @@ export class SlackService {
     channel: string;
     username: string;
     text: string;
-  }): Promise<AxiosResponse> {
+  }): Promise<string> {
     const url = this.configService.get<string>('SLACK_WEBHOOK_URL');
 
     return firstValueFrom(
-      this.httpService.post(url, data).pipe(map((x) => x.data)),
+      this.httpService.post<string>(url, data).pipe(map((x) => x.data)),
     );
   }
 
-  async sendSlackReport(id: number, report: string): Promise<AxiosResponse> {
+  async sendSlackPending(id: number): Promise<string> {
+    const data = {
+      channel: 'hotdeal-alert',
+      username: 'Pending Deal',
+      text: `[Pending] #${id}\nhttps://www.macguider.io/deals/report/${id}`,
+    };
+
+    return this.sendSlackMessage(data);
+  }
+
+  async sendSlackReport(id: number, report: string): Promise<string> {
     const data = {
       channel: 'hotdeal-alert',
       username: 'User Report',
@@ -37,7 +46,7 @@ export class SlackService {
     id: number;
     url: string;
     success: boolean;
-  }): Promise<AxiosResponse> {
+  }): Promise<string> {
     const { id, url, success } = result;
     const data = {
       channel: 'logs',
