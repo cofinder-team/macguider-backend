@@ -23,6 +23,7 @@ import {
   DealRawCreateRequestDto,
   DealStateRequestDto,
   DealCreateRequestDto,
+  DealUpdateRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
@@ -122,6 +123,29 @@ export class DealController {
     await this.dealService.updateDeal(id, { imageId, image });
 
     // TODO: send slack message if pending
+  }
+
+  @Put('/:id')
+  @UseGuards(IpGuard)
+  @ApiOperation({ summary: '수집된 거래 정보 갱신 (Whitelisted IP 전용)' })
+  @ApiBearerAuth()
+  async updateDeal(
+    @Param('id') id: number,
+    @Body() body: DealUpdateRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDeal(id);
+
+    const { imageUrl, ...info } = body;
+
+    // TODO: replace logic with image server
+    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const { id: imageId } = await this.imageService.createImage(interImage);
+
+    const image = await this.dealService.fetchImage(imageUrl);
+    const payload = { ...info, imageId, image };
+
+    const { affected } = await this.dealService.updateDeal(id, payload);
+    if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
   @Patch('/:id')
