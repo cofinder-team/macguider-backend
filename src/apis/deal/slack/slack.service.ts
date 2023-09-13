@@ -22,6 +22,16 @@ export class SlackService {
     );
   }
 
+  async sendSlackPending(id: number): Promise<string> {
+    const data = {
+      channel: 'hotdeal-alert',
+      username: 'Pending Deal',
+      text: `[Pending] #${id}\nhttps://www.macguider.io/deals/report/${id}`,
+    };
+
+    return this.sendSlackMessage(data);
+  }
+
   async sendSlackReport(id: number, report: string): Promise<string> {
     const data = {
       channel: 'hotdeal-alert',

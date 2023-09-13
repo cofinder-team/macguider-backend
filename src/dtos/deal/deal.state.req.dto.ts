@@ -5,7 +5,6 @@ export class DealStateRequestDto {
   @IsBoolean()
   @IsOptional()
   @Transform(({ value }) => {
-    console.log(value);
     return value === true || value === 'true';
   })
   pending?: boolean;

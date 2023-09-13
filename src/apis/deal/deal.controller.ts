@@ -122,7 +122,9 @@ export class DealController {
     const image = await this.dealService.fetchImage(imageUrl);
     await this.dealService.updateDeal(id, { imageId, image });
 
-    // TODO: send slack message if pending
+    if (pending) {
+      await this.slackService.sendSlackPending(id);
+    }
   }
 
   @Put('/:id')
