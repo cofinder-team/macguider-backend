@@ -48,7 +48,26 @@ export class DealService {
       : { discount: 'DESC' };
   }
 
+  private defaultRelations: FindOptionsRelations<Deal> = {
+    item: getItemDetailRelation({ modelEntity: {} }),
+    imageEntity: {},
+  };
+
   private async getDeals(
+    where: FindOptionsWhere<Deal> | FindOptionsWhere<Deal>[],
+    order: FindOptionsOrder<Deal>,
+    page: FindOptionsPage,
+    relations: FindOptionsRelations<Deal>,
+  ): Promise<Deal[]> {
+    return this.dealRepository.find({
+      where,
+      order,
+      ...page,
+      relations,
+    });
+  }
+
+  private async getDealsFiltered(
     where: FindOptionsWhere<DealFiltered> | FindOptionsWhere<DealFiltered>[],
     order: FindOptionsOrder<DealFiltered>,
     page: FindOptionsPage,
@@ -62,7 +81,25 @@ export class DealService {
     });
   }
 
-  async getDealsByOptions(
+  async getDealsOnSale(): Promise<Deal[]> {
+    const where: FindOptionsWhere<Deal> = { sold: false };
+    const order: FindOptionsOrder<Deal> = { id: 'ASC' };
+    const page: FindOptionsPage = {};
+    const relations: FindOptionsRelations<Deal> = {};
+
+    return this.getDealsFiltered(where, order, page, relations);
+  }
+
+  async getDealsSearch(options: FindOptionsWhere<Deal>): Promise<Deal[]> {
+    const where: FindOptionsWhere<Deal> = { ...options };
+    const order: FindOptionsOrder<Deal> = { id: 'ASC' };
+    const page: FindOptionsPage = {};
+    const relations: FindOptionsRelations<Deal> = {};
+
+    return this.getDeals(where, order, page, relations);
+  }
+
+  async getDealsFilteredByOptions(
     options: FindOptionsWhere<DealFiltered>,
     order: FindOptionsOrder<DealFiltered>,
     page: FindOptionsPage,
@@ -71,18 +108,17 @@ export class DealService {
       ...options,
       date: MoreThanOrEqual(addDays(new Date(), -3)),
     };
-
     const relations: FindOptionsRelations<DealFiltered> = {
-      item: getItemDetailRelation({ modelEntity: {} }),
+      ...this.defaultRelations,
     };
 
-    return this.getDeals(where, order, page, relations);
+    return this.getDealsFiltered(where, order, page, relations);
   }
 
   async getDeal(id: number): Promise<Deal> {
     return this.dealRepository.findOneOrFail({
       where: { id },
-      relations: { item: getItemDetailRelation({ modelEntity: {} }) },
+      relations: this.defaultRelations,
     });
   }
 
@@ -122,7 +158,20 @@ export class DealService {
     await this.dealRawRepository.update({ id }, { classified: true });
   }
 
-  async createDeal(id: number, payload: Partial<Deal>): Promise<void> {
+  async fetchImage(url: string): Promise<Buffer> {
+    return fetch(url)
+      .then((res) => res.arrayBuffer().then(Buffer.from))
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
+  }
+
+  async createDeal(payload: Partial<Deal>): Promise<Deal> {
+    return this.dealRepository.create(payload).save();
+  }
+
+  async createDealFromRaw(id: number, payload: Partial<Deal>): Promise<void> {
     const dealRaw = await this.getDealRaw(id);
     const {
       price,
@@ -137,12 +186,7 @@ export class DealService {
       content,
     } = dealRaw;
 
-    const image = await fetch(`${imgUrl}?type=w300`)
-      .then((res) => res.arrayBuffer().then(Buffer.from))
-      .catch((e) => {
-        console.log(e);
-        return null;
-      });
+    const image = await this.fetchImage(`${imgUrl}?type=w300`);
 
     const deal = {
       type,

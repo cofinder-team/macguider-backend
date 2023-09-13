@@ -8,8 +8,9 @@ import {
 import { ItemResponseDto } from '../item';
 import { PriceTradeResponseDto } from '../price/price.trade.res.dto';
 import { PriceCoupangResponseDto, PriceRegularResponseDto } from '../price';
+import { ImageResponseDto } from '../common';
 
-abstract class DealAbstractResponseDto {
+export class DealResponseDto {
   id: number;
   item: ItemResponseDto;
   date: Date;
@@ -18,10 +19,22 @@ abstract class DealAbstractResponseDto {
   unused: boolean;
   source: string;
   url: string;
+  image?: ImageResponseDto;
 
-  static of(deal: Deal): DealAbstractResponseDto {
-    const { id, type, itemId, item, date, price, sold, unused, source, url } =
-      deal;
+  static of(deal: Deal): DealResponseDto {
+    const {
+      id,
+      type,
+      itemId,
+      item,
+      date,
+      price,
+      sold,
+      unused,
+      source,
+      url,
+      imageEntity,
+    } = deal;
 
     return {
       id,
@@ -32,11 +45,12 @@ abstract class DealAbstractResponseDto {
       unused,
       source,
       url,
+      image: imageEntity ? ImageResponseDto.of(imageEntity) : undefined,
     };
   }
 }
 
-export class DealFilteredResponseDto extends DealAbstractResponseDto {
+export class DealFilteredResponseDto extends DealResponseDto {
   tradePrice: Pick<PriceTradeResponseDto, 'average'>;
 
   static of(deal: DealFiltered): DealFilteredResponseDto {
@@ -45,7 +59,7 @@ export class DealFilteredResponseDto extends DealAbstractResponseDto {
   }
 }
 
-export class DealResponseDto extends DealAbstractResponseDto {
+export class DealDetailResponseDto extends DealResponseDto {
   regularPrice: PriceRegularResponseDto;
   coupangPrice: PriceCoupangResponseDto;
   tradePrice: PriceTradeResponseDto;
@@ -56,7 +70,7 @@ export class DealResponseDto extends DealAbstractResponseDto {
       coupangPrice: PriceCoupang;
       tradePrice: PriceTrade;
     },
-  ): DealResponseDto {
+  ): DealDetailResponseDto {
     const { regularPrice, coupangPrice, tradePrice } = deal;
 
     return {
