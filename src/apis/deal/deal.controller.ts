@@ -63,7 +63,7 @@ export class DealController {
     const order = this.dealService.getOrder(sort, direction);
     const page = paginate(pagination);
 
-    const deals = await this.dealService.getDealsByOptions(
+    const deals = await this.dealService.getDealsFilteredByOptions(
       options,
       order,
       page,
