@@ -1,9 +1,9 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional } from 'class-validator';
 
-export class DealStateRequestDto {
+export class DealRemoveRequestDto {
   @IsBoolean()
   @IsOptional()
   @Transform(({ value }) => value === true || value === 'true')
-  pending?: boolean;
+  sold?: boolean = false;
 }

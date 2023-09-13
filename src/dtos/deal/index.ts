@@ -8,6 +8,7 @@ import { DealRawCreateRequestDto } from './deal-raw.create.req.dto';
 import { DealCreateRequestDto } from './deal.create.req.dto';
 import { DealStateRequestDto } from './deal.state.req.dto';
 import { DealUpdateRequestDto } from './deal.update.req.dto';
+import { DealRemoveRequestDto } from './deal.remove.req.dto';
 
 export {
   DealRequestDto,
@@ -15,6 +16,7 @@ export {
   DealCreateRequestDto,
   DealStateRequestDto,
   DealUpdateRequestDto,
+  DealRemoveRequestDto,
   DealManageRequestDto,
   DealReportRequestDto,
   DealRawCreateRequestDto,

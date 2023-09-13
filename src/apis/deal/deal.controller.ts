@@ -7,6 +7,7 @@ import {
   Patch,
   Put,
   Post,
+  Delete,
   Query,
   UseGuards,
   Res,
@@ -24,6 +25,7 @@ import {
   DealStateRequestDto,
   DealCreateRequestDto,
   DealUpdateRequestDto,
+  DealRemoveRequestDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
@@ -129,7 +131,7 @@ export class DealController {
 
   @Put('/:id')
   @UseGuards(IpGuard)
-  @ApiOperation({ summary: '수집된 거래 정보 갱신 (Whitelisted IP 전용)' })
+  @ApiOperation({ summary: '거래 정보 새 글로 갱신 (Whitelisted IP 전용)' })
   @ApiBearerAuth()
   async updateDeal(
     @Param('id') id: number,
@@ -147,6 +149,27 @@ export class DealController {
     const payload = { ...info, imageId, image };
 
     const { affected } = await this.dealService.updateDeal(id, payload);
+    if (!affected) throw new EntityNotFoundError(Deal, id);
+  }
+
+  @Delete('/:id')
+  @UseGuards(IpGuard)
+  @ApiOperation({
+    summary: '거래 정보 판매 완료 처리 및 삭제 (Whitelisted IP 전용)',
+  })
+  @ApiBearerAuth()
+  async removeDeal(
+    @Param('id') id: number,
+    @Query() query: DealRemoveRequestDto,
+  ): Promise<void> {
+    await this.dealService.getDeal(id);
+
+    const { sold } = query;
+    const payload = { sold };
+
+    const { affected } = sold
+      ? await this.dealService.updateDeal(id, payload)
+      : await this.dealService.deleteDeal(id);
     if (!affected) throw new EntityNotFoundError(Deal, id);
   }
 
