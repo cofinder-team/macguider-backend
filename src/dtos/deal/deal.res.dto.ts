@@ -81,3 +81,23 @@ export class DealDetailResponseDto extends DealResponseDto {
     };
   }
 }
+
+export class DealOriginResponseDto extends DealResponseDto {
+  pending: boolean;
+  title: string;
+  content: string;
+  writer: string;
+  tradePrice: PriceTradeResponseDto;
+
+  static of(deal: Deal & { tradePrice: PriceTrade }): DealOriginResponseDto {
+    const { pending, title, content, writer, tradePrice } = deal;
+    return {
+      ...super.of(deal),
+      pending,
+      title,
+      content,
+      writer,
+      tradePrice: PriceTradeResponseDto.of(tradePrice),
+    };
+  }
+}
