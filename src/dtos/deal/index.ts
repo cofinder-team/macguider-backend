@@ -6,6 +6,7 @@ import { DealRequestDto } from './deal.req.dto';
 import {
   DealDetailResponseDto,
   DealFilteredResponseDto,
+  DealOriginResponseDto,
   DealResponseDto,
 } from './deal.res.dto';
 import { DealRawCreateRequestDto } from './deal-raw.create.req.dto';
@@ -20,6 +21,7 @@ export {
   DealResponseDto,
   DealFilteredResponseDto,
   DealDetailResponseDto,
+  DealOriginResponseDto,
   DealCreateRequestDto,
   DealStateRequestDto,
   DealUpdateRequestDto,

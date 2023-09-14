@@ -28,6 +28,7 @@ import {
   DealSearchRequestDto,
   DealFilteredResponseDto,
   DealDetailResponseDto,
+  DealOriginResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
@@ -129,6 +130,20 @@ export class DealController {
   ): Promise<void> {
     const buffer = await this.dealService.getDealImage(id);
     response.send(buffer);
+  }
+
+  @Get('/:id/origin')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({ summary: '거래 원본 정보 조회 (Admin Console 전용)' })
+  @ApiBearerAuth()
+  async getDealOrigin(@Param('id') id: number): Promise<DealOriginResponseDto> {
+    const deal = await this.dealService.getDeal(id);
+    const { type, itemId } = deal;
+
+    const item = { type, id: itemId };
+    const tradePrice = await this.priceService.getRecentTradePrice(item);
+
+    return DealOriginResponseDto.of(Object.assign(deal, { tradePrice }));
   }
 
   @Post()
