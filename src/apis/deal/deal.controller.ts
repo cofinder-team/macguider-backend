@@ -160,7 +160,7 @@ export class DealController {
     const { id } = await this.dealService.createDeal(payload);
 
     // TODO: replace logic with image server
-    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
     const { id: imageId } = await this.imageService.createImage(interImage);
 
     const image = await this.dealService.fetchImage(imageUrl);
@@ -184,7 +184,7 @@ export class DealController {
     const { imageUrl, ...info } = body;
 
     // TODO: replace logic with image server
-    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
     const { id: imageId } = await this.imageService.createImage(interImage);
 
     const image = await this.dealService.fetchImage(imageUrl);
