@@ -39,4 +39,15 @@ export class UserController {
 
     await this.slackService.sendSlackSubscription(email);
   }
+
+  @Post('/subscribe/:uuid')
+  @ApiOperation({ summary: '기존 사용자의 뉴스레터 구독 처리' })
+  async processSubscriptionUser(
+    @Param() param: SubscriptionUserRequestDto,
+  ): Promise<void> {
+    const { uuid } = param;
+    const { email } = await this.userService.getUserByUuid(uuid);
+
+    await this.slackService.sendSlackSubscription(email);
+  }
 }

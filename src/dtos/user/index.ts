@@ -1,4 +1,11 @@
 import { UserResponseDto } from './user.res.dto';
-import { SubscriptionDirectRequestDto } from './subscription.req.dto';
+import {
+  SubscriptionDirectRequestDto,
+  SubscriptionUserRequestDto,
+} from './subscription.req.dto';
 
-export { SubscriptionDirectRequestDto, UserResponseDto };
+export {
+  SubscriptionDirectRequestDto,
+  SubscriptionUserRequestDto,
+  UserResponseDto,
+};
