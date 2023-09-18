@@ -38,7 +38,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { Role } from 'src/lib/enums';
-import { SlackService } from './slack/slack.service';
+import { SlackService } from '../slack/slack.service';
 import { TradeSource } from 'src/lib/enums';
 import { Response } from 'express';
 import { IpGuard } from '../auth/guard/ip.guard';
