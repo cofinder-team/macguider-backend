@@ -5,7 +5,7 @@ import { DealService } from './deal.service';
 import { Deal, DealFiltered, DealRaw, User, Image } from 'src/entities';
 import { PriceService } from '../price/price.service';
 import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
-import { SlackModule } from './slack/slack.module';
+import { SlackModule } from '../slack/slack.module';
 import { ConfigModule } from '@nestjs/config';
 import { ImageService } from '../image/image.service';
 
