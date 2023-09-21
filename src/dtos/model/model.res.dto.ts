@@ -23,3 +23,16 @@ export class ModelResponseDto {
     };
   }
 }
+
+export class ModelDetailResponseDto extends ModelResponseDto {
+  description: string;
+
+  static of(model: Model): ModelDetailResponseDto {
+    const { description } = model;
+
+    return {
+      ...super.of(model),
+      description,
+    };
+  }
+}

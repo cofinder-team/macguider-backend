@@ -33,6 +33,9 @@ export class Model {
   @Column({ nullable: true })
   mainItemId: number;
 
+  @Column({ nullable: true })
+  description: string;
+
   @OneToOne(() => Item, (item) => item.representativeModel)
   @JoinColumn([
     {
