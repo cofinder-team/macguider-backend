@@ -1,4 +1,7 @@
-import { ModelResponseDto } from '../model/model.res.dto';
+import {
+  ModelDetailResponseDto,
+  ModelResponseDto,
+} from '../model/model.res.dto';
 import { ModelRequestDto } from '../model/model.req.dto';
 
-export { ModelRequestDto, ModelResponseDto };
+export { ModelRequestDto, ModelResponseDto, ModelDetailResponseDto };

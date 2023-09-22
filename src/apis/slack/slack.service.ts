@@ -56,4 +56,14 @@ export class SlackService {
 
     return this.sendSlackMessage(data);
   }
+
+  async sendSlackSubscription(email: string): Promise<string> {
+    const data = {
+      channel: '#9-3-webhook',
+      username: 'Subscription Alert',
+      text: `New Email Subscription Submission: ${email}`,
+    };
+
+    return this.sendSlackMessage(data);
+  }
 }

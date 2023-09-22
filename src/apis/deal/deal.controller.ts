@@ -28,6 +28,7 @@ import {
   DealSearchRequestDto,
   DealFilteredResponseDto,
   DealDetailResponseDto,
+  DealOriginResponseDto,
 } from 'src/dtos';
 import { paginate } from 'src/lib/utils/pagination.util';
 import { EntityNotFoundError } from 'typeorm';
@@ -37,7 +38,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { Role } from 'src/lib/enums';
-import { SlackService } from './slack/slack.service';
+import { SlackService } from '../slack/slack.service';
 import { TradeSource } from 'src/lib/enums';
 import { Response } from 'express';
 import { IpGuard } from '../auth/guard/ip.guard';
@@ -131,6 +132,20 @@ export class DealController {
     response.send(buffer);
   }
 
+  @Get('/:id/origin')
+  @UseGuards(JwtAuthGuard, RoleGuard(Role.ADMIN))
+  @ApiOperation({ summary: '거래 원본 정보 조회 (Admin Console 전용)' })
+  @ApiBearerAuth()
+  async getDealOrigin(@Param('id') id: number): Promise<DealOriginResponseDto> {
+    const deal = await this.dealService.getDeal(id);
+    const { type, itemId } = deal;
+
+    const item = { type, id: itemId };
+    const tradePrice = await this.priceService.getRecentTradePrice(item);
+
+    return DealOriginResponseDto.of(Object.assign(deal, { tradePrice }));
+  }
+
   @Post()
   @UseGuards(IpGuard)
   @ApiOperation({ summary: '수집된 거래 정보 등록 (Whitelisted IP 전용)' })
@@ -145,7 +160,7 @@ export class DealController {
     const { id } = await this.dealService.createDeal(payload);
 
     // TODO: replace logic with image server
-    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
     const { id: imageId } = await this.imageService.createImage(interImage);
 
     const image = await this.dealService.fetchImage(imageUrl);
@@ -169,7 +184,7 @@ export class DealController {
     const { imageUrl, ...info } = body;
 
     // TODO: replace logic with image server
-    const interImage = { url: `https://macguider.io/deal/${id}/image` };
+    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
     const { id: imageId } = await this.imageService.createImage(interImage);
 
     const image = await this.dealService.fetchImage(imageUrl);
