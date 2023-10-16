@@ -7,4 +7,21 @@ enum ImageType {
   TIFF = 'image/tiff',
 }
 
-export { ImageType };
+const getExtensionByImageType = (type: ImageType): string => {
+  switch (type) {
+    case ImageType.JPEG:
+      return 'jpeg';
+    case ImageType.PNG:
+      return 'png';
+    case ImageType.GIF:
+      return 'gif';
+    case ImageType.WEBP:
+      return 'webp';
+    case ImageType.SVG:
+      return 'svg';
+    case ImageType.TIFF:
+      return 'tiff';
+  }
+};
+
+export { ImageType, getExtensionByImageType };
