@@ -13,6 +13,7 @@ import { AuthModule } from './apis/auth/auth.module';
 import { UserModule } from './apis/user/user.module';
 import { AlertModule } from './apis/alert/alert.module';
 import { ModelModule } from './apis/model/model.module';
+import { ImageModule } from './apis/image/image.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ModelModule } from './apis/model/model.module';
     ModelModule,
     PriceModule,
     AlertModule,
+    ImageModule,
     TerminusModule,
   ],
   controllers: [AppController],

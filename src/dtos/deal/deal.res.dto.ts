@@ -8,7 +8,7 @@ import {
 import { ItemResponseDto } from '../item';
 import { PriceTradeResponseDto } from '../price/price.trade.res.dto';
 import { PriceCoupangResponseDto, PriceRegularResponseDto } from '../price';
-import { ImageResponseDto } from '../common';
+import { ImageResponseDto } from '../image/image.res.dto';
 
 export class DealResponseDto {
   id: number;
