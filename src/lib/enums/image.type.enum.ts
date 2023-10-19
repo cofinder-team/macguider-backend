@@ -24,4 +24,10 @@ const getExtensionByImageType = (type: ImageType): string => {
   }
 };
 
-export { ImageType, getExtensionByImageType };
+const parseImageType = (type: string): ImageType => {
+  return Object.values(ImageType).includes(type as ImageType)
+    ? (type as ImageType)
+    : undefined;
+};
+
+export { ImageType, getExtensionByImageType, parseImageType };
