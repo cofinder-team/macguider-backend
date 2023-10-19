@@ -8,6 +8,7 @@ import { PriceCoupang, PriceRegular, PriceTrade } from 'src/entities';
 import { SlackModule } from '../slack/slack.module';
 import { ConfigModule } from '@nestjs/config';
 import { ImageService } from '../image/image.service';
+import { S3Module } from '../image/s3/s3.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ImageService } from '../image/image.service';
       Image,
     ]),
     ConfigModule,
+    S3Module,
     SlackModule,
   ],
   controllers: [DealController],
