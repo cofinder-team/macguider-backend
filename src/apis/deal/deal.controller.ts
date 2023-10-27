@@ -43,6 +43,7 @@ import { TradeSource } from 'src/lib/enums';
 import { Response } from 'express';
 import { IpGuard } from '../auth/guard/ip.guard';
 import { ImageService } from '../image/image.service';
+import { S3Service } from '../image/s3/s3.service';
 
 @Controller('deal')
 @ApiTags('deal')
@@ -51,6 +52,7 @@ export class DealController {
     private readonly dealService: DealService,
     private readonly priceService: PriceService,
     private readonly imageService: ImageService,
+    private readonly s3Service: S3Service,
     private readonly slackService: SlackService,
   ) {}
 
@@ -156,15 +158,12 @@ export class DealController {
     const { pending } = state;
     const { imageUrl, ...info } = body;
 
-    const payload = { ...info, pending };
+    const image = await this.imageService.fetchImage(imageUrl);
+    await this.s3Service.uploadS3Image(image);
+    const { id: imageId } = await this.imageService.createImage(image);
+
+    const payload = { ...info, pending, imageId };
     const { id } = await this.dealService.createDeal(payload);
-
-    // TODO: replace logic with image server
-    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
-    const { id: imageId } = await this.imageService.createImage(interImage);
-
-    const image = await this.dealService.fetchImage(imageUrl);
-    await this.dealService.updateDeal(id, { imageId, image });
 
     if (pending) {
       await this.slackService.sendSlackPending(id);
@@ -183,12 +182,11 @@ export class DealController {
 
     const { imageUrl, ...info } = body;
 
-    // TODO: replace logic with image server
-    const interImage = { url: `https://api.macguider.io/deal/${id}/image` };
-    const { id: imageId } = await this.imageService.createImage(interImage);
+    const image = await this.imageService.fetchImage(imageUrl);
+    await this.s3Service.uploadS3Image(image);
+    const { id: imageId } = await this.imageService.createImage(image);
 
-    const image = await this.dealService.fetchImage(imageUrl);
-    const payload = { ...info, imageId, image };
+    const payload = { ...info, imageId };
 
     const { affected } = await this.dealService.updateDeal(id, payload);
     if (!affected) throw new EntityNotFoundError(Deal, id);

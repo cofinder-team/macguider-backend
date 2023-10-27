@@ -1,6 +1,6 @@
 import { Item, ItemDetail } from 'src/entities';
 import { ModelResponseDto } from '../model/model.res.dto';
-import { ImageResponseDto } from '../common/image.res.dto';
+import { ImageResponseDto } from '../image/image.res.dto';
 
 export class ItemResponseDto {
   type: string;
