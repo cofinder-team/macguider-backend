@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "183743639527.dkr.ecr.ap-northeast-2.amazonaws.com/cofinder-api",
+    "Name": "183743639527.dkr.ecr.ap-northeast-2.amazonaws.com/cofinder-api:latest",
     "Update": "true"
   },
   "Ports": [
