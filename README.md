@@ -1,6 +1,9 @@
 # macguider-backend
 
-Backend Repository for [Macguider](https://macguider.io)
+Main API server for [Macguider](https://macguider.io)
+
+- Provides API logics for interaction with users on the web frontend
+- Provides (access-restricd) API for internal data processing from other microservices
 
 ## Execution Guides
 
@@ -13,16 +16,28 @@ Configuration by environment variable should be done before running the app.
 - About:
   - `APP_PORT`: Application listening port
   - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`: Database configurations
+  - `MAIL_HOST`, `MAIL_PORT`, `MAIL_AUTH_USER`, `MAIL_AUTH_PASS`: SMTP server configurations
+  - `S3_REGION`, `S3_BUCKET`, `S3_AUTH_PATH`, `S3_AUTH_PASS`: S3 image server configurations
+  - `ADMIN_ALLOW_IPS`: Whitelisting access from other microservices by IPs
 
 #### Example configuration
 
 ```
-APP_PORT = 3000
-DB_HOST = localhost
-DB_PORT = 5432
-DB_USERNAME = postgres
-DB_PASSWORD = postgres
-DB_DATABASE = postgres
+APP_PORT=3000
+DB_HOST="localhost"
+DB_PORT=5432
+DB_USERNAME="postgres"
+DB_PASSWORD="postgres"
+DB_DATABASE="postgres"
+MAIL_HOST="email-smtp.ap-northeast-2.amazonaws.com"
+MAIL_PORT=587
+MAIL_AUTH_USER="MAIL_AUTH_USER",
+MAIL_AUTH_PASS="MAIL_AUTH_PASS"
+S3_REGION="ap-northeast-2"
+S3_BUCKET="macguider-images"
+S3_AUTH_USER="S3_AUTH_USER"
+S3_AUTH_PASS="S3_AUTH_PASS"
+ADMIN_ALLOW_IPS="127.0.0.1,127.0.0.2"
 ```
 
 ### Installation

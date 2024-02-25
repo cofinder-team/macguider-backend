@@ -1,10 +1,10 @@
 {
   "name": "macguider-backend",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "version": "23.10.29",
+  "description": "Main API server for Macguider",
+  "author": "cofinder",
+  "private": false,
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
